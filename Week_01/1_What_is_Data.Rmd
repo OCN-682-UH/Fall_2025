@@ -67,15 +67,6 @@ Dr. Nyssa Silbiger
 TA is Callie Stephenson
 - Office hours: Monday 11:00 - 13:00 (MSB 305)
  
---
-
-.center[
-_please email us if you plan to come so we don't look like..._
-
-<img src="https://media.giphy.com/media/xUOxf9lJKcBDrE6qmk/giphy.gif" width="35%" align="center" />
-
-]
-
 
 ---
 
@@ -172,7 +163,7 @@ class: inverse, middle, center
 library(tidyverse)
 library(patchwork)
 
-survey<-read_csv("libs/Data/survey.csv")
+survey<-read_csv("libs/Data/survey4.csv")
 nr<-nrow(survey)
 
 # make barplots for eachs question
@@ -228,18 +219,18 @@ gitexper<-survey %>%
         title = element_text(size = 14))
 
 
-degree
+#degree
 ```
 
 ---
-# What is your experience
+# What is your experience?
 
 ```{r, echo=FALSE, warning=FALSE, message = FALSE}
 Rexper
 ```
 
 ---
-# What is your experience
+# What is your experience?
 
 ```{r, echo=FALSE, warning=FALSE, message = FALSE}
 gitexper
