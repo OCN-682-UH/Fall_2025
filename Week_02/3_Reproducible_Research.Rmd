@@ -229,7 +229,7 @@ Say I’ve been **arrested for a murder** that was committed 6 months ago. My at
 
 # Examples of #OpenScience
 
-![Silbiger](libs/Images/labgithub.PNG)
+![Silbiger lab](libs/Images/labgithub.PNG)
 
 ---
 # Why some people are scared....
