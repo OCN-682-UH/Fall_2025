@@ -243,6 +243,18 @@ Say I’ve been **arrested for a murder** that was committed 6 months ago. My at
 .center[Work together, advance science, and don't waste time and money]
 
 ---
+# FAIR and CARE principles
+
+![FAIR and CARE](https://images.squarespace-cdn.com/content/v1/5d3799de845604000199cd24/1567592451970-2R8XFL670QNMAGDRV7ED/Be+FAIR+and+CARE.png?format=2500w)
+
+---
+
+# CARE principles for Indigenous Data Governance
+
+<img src="libs/Images/CARE.png", width="450", height = "450">
+Jennings et al.2023
+
+---
 
 # Our tools this semester for open and reproducible science
 
