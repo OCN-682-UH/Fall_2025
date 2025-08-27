@@ -56,7 +56,7 @@ Homework
 
 --
 
-1. Fall-2024  
+1. Fall-2025  
   - This is where all the information for the class will be.
   - You **DO NOT** have access to push to this repo so that you do not accidentally change the lecture slides. You can only **pull**
   - Every day before class use *git pull* to download all the class materials
@@ -73,7 +73,7 @@ I will show you an example now
 ---
 # Working in git for this class
 
-1.  Before class starts, navigate to "Fall-2024" in your projects (upper right-hand corner of RStudio) and **pull.**
+1.  Before class starts, navigate to "Fall-2025" in your projects (upper right-hand corner of RStudio) and **pull.**
 
 --
 1.   Next navigate to your personal repository and **pull**.  
@@ -300,7 +300,7 @@ install.packages("here")
 ### **Consider**: an absolute file path
 
 ```{r, eval=FALSE}
-my_data <- read_csv("usr/nsilbiger/My Documents/ComputerModeling/Fall 2024/Lab 1/data/some_data.csv”)
+my_data <- read_csv("usr/nsilbiger/My Documents/ComputerModeling/Fall 2025/Lab 1/data/some_data.csv”)
 
 ```
 
@@ -379,7 +379,7 @@ install.packages("tidyverse")
 
 --
 
-- Copy the **"weightdata.csv"** file from the Fall-2024 repo into your own private repo.  Put it in the **data** folder within **Week_02**.  
+- Copy the **"weightdata.csv"** file from the Fall-2025 repo into your own private repo.  Put it in the **data** folder within **Week_02**.  
 
 --
 
@@ -393,7 +393,7 @@ The first thing we do is make a header
 ```{r, eval=FALSE}
 ### This is my first script.  I am learning how to import data
 ### Created by: Dr. Nyssa Silbiger
-### Created on: 2024-09-03
+### Created on: 2025-09-02
 ###############################################
 
 ```
