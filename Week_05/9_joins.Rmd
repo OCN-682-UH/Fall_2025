@@ -59,7 +59,7 @@ green <- "#007965"
 
 1. Quiz!
 1. Review of tidyr
-1. Independent Project update
+1. Independent Project update (It is on GitHub, Nyssa will go over next week)
 1. Learning joins (part of the {dplyr} package)
   - left_join() -- with real data
 
@@ -73,7 +73,7 @@ green <- "#007965"
   - anti_join()
   
 Homework 
-1. Practice with joins
+1. Practice with joins and dates in online assignment
 
 
 
