@@ -1,0 +1,53 @@
+---
+title: "Week 6a. Introduction to Quarto"
+author: "Nyssa Silbiger"
+date: today
+format: 
+  revealjs:
+    transition: slide    
+    background-transition: fade
+---
+
+# Outline
+
+::: {.columns}
+::: {.column width="50%"}
+- Quiz 5
+- What is Quarto?
+- Metadata and outputs
+- Basic Markdown Text
+- Using code chunks  
+:::
+
+::: {.column width="50%"}
+*Next Time*  
+- Working with figures and tables  
+- Themes  
+- Advanced Outputs   
+
+[Quarto Cheatsheet](https://rstudio.github.io/cheatsheets/html/quarto.html)
+
+:::
+:::
+
+## Review
+
+> If I want to convert Feb 28 2021 10:05:50 to a date, what function do I use?
+
+---
+
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```

@@ -1,0 +1,70 @@
+---
+title: "Penguins"
+author: "Nyssa"
+date: "10/01/2024"
+output: 
+  html_document:
+    toc: TRUE 
+    toc_float: TRUE 
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message=FALSE, 
+                      warning=FALSE,
+                      fig.path = "../output/")
+```
+
+# Intro 
+
+Today we are going to work with the penguin data to learn *RMarkdown*.
+
+# Load Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(kableExtra)
+```
+
+# Inspect the data
+```{r}
+glimpse(penguins)
+```
+
+# Make a plot 
+
+```{r penguinplot, fig.asp=1.2, fig.align='center', fig.cap="This is a scatterplot of penguins", dev="pdf"}
+penguins %>% # using penguin dataset
+  ggplot(aes(x = bill_length_mm, # length
+             y = bill_depth_mm, #depth 
+             color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill Length (mm)",
+       y = "Bill Depth (mm)")+
+  theme_bw()
+```
+
+| Time  | Session | Topic    |
+|:------|:-------:|---------:|
+| _left_ | _center_| _right_ |
+| 01:00  | 1       | Anatomy |
+| 01:50  |         | *Break* |
+| 02:00  | 2       | Tables  |
+| 02:45  |         | *Break* |
+
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) %>%
+  kbl() %>%  # make it a kable table
+  kable_classic()%>%
+  row_spec(2, bold = T, color = "white", background = "red")%>%
+  kable_styling(full_width = FALSE)
+
+```
+
