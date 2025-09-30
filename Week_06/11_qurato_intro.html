@@ -366,25 +366,45 @@ Nyssa Silbiger
 <p>If I want to convert Feb 28 2021 10:05:50 to a date, what function do I use?</p>
 </blockquote>
 </section>
-<section id="bullets" class="slide level2">
-<h2>Bullets</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes:</p>
-<ul>
-<li>Content authored with markdown</li>
-<li>Output from executable code</li>
-</ul>
+<section id="what-is-quarto" class="slide level2">
+<h2>What is Quarto?</h2>
+<h3 id="analyze.-share.-reproduce.-you-have-a-story-to-tell-with-datatell-it-with-quarto.">Analyze. Share. Reproduce. You have a story to tell with data—tell it with Quarto.</h3>
+
+<img data-src="https://rstudio.github.io/cheatsheets/html/images/quarto-illustration.png" class="r-stretch"></section>
+<section id="what-is-quarto-1" class="slide level2 smaller">
+<h2>What is Quarto?</h2>
+<p><span style="color:purple;"><strong>Quarto provides a unified authoring framework for data science, combining your code, its results, and your prose. Quarto documents are fully reproducible and support dozens of output formats, like PDFs, Word files, presentations, and more.</strong></span></p>
+<div class="fragment">
+<ol type="1">
+<li>For communicating to decision-makers, who want to focus on the conclusions, not the code behind the analysis.</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="2" type="1">
+<li>For collaborating with other data scientists (including future you!), who are interested in both your conclusions, and how you reached them (i.e.&nbsp;the code).</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="3" type="1">
+<li>As an environment in which to do data science, as a modern-day lab notebook where you can capture not only what you did, but also what you were thinking.</li>
+</ol>
+</div>
 </section>
-<section id="code" class="slide level2">
-<h2>Code</h2>
-<p>When you click the <strong>Render</strong> button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
-<div class="quarto-auto-generated-content">
+<section id="change-your-mental-mode" class="slide level2 smaller">
+<h2>Change your mental mode</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="source-to-output">Source to Output</h3>
+<p><img data-src="https://apreshill.github.io/rmd4cdc/images/word.png" style="width:50.0%"></p>
+</div><div class="column" style="width:50%;">
+<h3 id="source-to-output-1">Source to Output</h3>
+<p><img data-src="https://apreshill.github.io/rmd4cdc/images/rmd-file.png" style="width:50.0%"></p>
+</div><div class="{footer}">
+<p><strong>Take your notes in the same place as your code</strong></p>
+</div><div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
 </div>
 </div>
 </section></section>
@@ -598,82 +618,6 @@ Nyssa Silbiger
         ]
       });
     </script>
-    
-
-    <script>
-
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
-      // slide changes (different for each slide format).
-
-      (function () {
-
-        // dispatch for htmlwidgets
-
-        function fireSlideEnter() {
-
-          const event = window.document.createEvent("Event");
-
-          event.initEvent("slideenter", true, true);
-
-          window.document.dispatchEvent(event);
-
-        }
-
-    
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-
-          fireSlideEnter();
-
-    
-
-          // dispatch for shiny
-
-          if (window.jQuery) {
-
-            if (previousSlide) {
-
-              window.jQuery(previousSlide).trigger("hidden");
-
-            }
-
-            if (currentSlide) {
-
-              window.jQuery(currentSlide).trigger("shown");
-
-            }
-
-          }
-
-        }
-
-    
-
-        // hookup for slidy
-
-        if (window.w3c_slidy) {
-
-          window.w3c_slidy.add_observer(function (slide_num) {
-
-            // slide_num starts at position 1
-
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
-          });
-
-        }
-
-    
-
-      })();
-
-    </script>
-
-    
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
