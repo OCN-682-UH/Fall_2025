@@ -4,7 +4,7 @@ author: "Nyssa Silbiger"
 date: today
 format: 
   revealjs:
-    transition: slide    
+    transition: slide  
     background-transition: fade
 ---
 
@@ -85,5 +85,256 @@ format:
 :::
 
 ::: {footer}
-**Take your notes in the same place as your code**
+**Take your notes in the same place as your code**  
 :::
+:::
+
+
+---  
+
+
+## What is inside?  
+
+![](https://apreshill.github.io/rmd4cdc/images/doc-make.jpg)  
+---
+
+## What is inside?  
+
+Quarto is broken into 4 major parts: 
+
+::: {.columns}
+::: {.column width="50%"}
+  - Metadata  
+  - Text  
+  - Code  
+  - Output   
+  
+::: 
+  
+::: {.column width="50%"}
+  ![](libs/images/quartofile.jpeg){width="120%"} 
+::: 
+::: 
+
+*Before we code together I will walk you through some of the features. Then I will have you work with me.*  
+
+---
+## Metadata: YAML {.smaller}
+
+### YAML - *yet another markup language*
+
+```{r}
+#| eval: false
+#| echo: true
+---
+key: value
+---
+
+```
+
+This goes at the top of your RMarkdown document, includes the metadata, style, and type of output for your document.
+
+::: {.fragment}
+You only need two pieces for it to work, but there is lots more to add to make it beautiful.
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+---
+title: "My Awesome Markdown File"
+format: html
+---
+  
+```
+
+*title* is the title of your markdown document  
+*format* is the format that it will be saved as
+
+:::
+
+---
+
+  
+## Example YAML
+
+![](libs/images/no_toc.png)
+
+---
+
+{{<video libs/images/no_toc.mp4>}} 
+
+---
+
+![](libs/images/with_toc.png)
+---
+
+{{<video libs/images/WITH_toc.mp4>}} 
+
+---
+
+## Let's get started
+
+![](libs/images/Quarto1.png)
+
+---
+
+## Enter in some metadata and save the doc in your folder
+
+![](libs/images/Quarto2.png) 
+
+
+---
+
+## You create an html document by hitting render
+
+![](libs/images/Quarto3.png) 
+
+---
+
+## Text
+
+The text is written in the markdown language. You have already done a lab on markdown and this is the exact language that you use for your readme files. This is a short review.  
+
+
+---
+
+
+
+## Bold 
+
+::: {.columns}
+::: {.column width="50%}
+```{r}
+#| echo: true
+#| eval: false
+
+I **love** markdown
+
+```
+
+::: {.fragment}
+## *Italics*
+```{r}
+#| echo: true
+#| eval: false
+
+I *love* markdown
+
+```
+:::
+:::
+
+::: {.column width="50%}
+
+I **love** markdown  
+
+::: {.fragment}
+
+I *love* markdown
+
+:::
+:::
+:::
+
+
+# Lists  
+
+
+::: {.columns}
+::: {.column width="50%}
+```{r}
+#| eval: false
+#| echo: true
+#  - item 1
+#  - item 2
+#  - item 3
+```
+:::
+::: {.column width="50%}
+  - item 1
+  - item 2
+  - item 3  
+  
+:::
+:::
+
+---
+
+## Images
+
+```{r}
+#| eval: false
+#| echo: true
+![](https://pbs.twimg.com/profile_images/1052001602628857856/AGtSZNoO_400x400.jpg)
+```
+
+![](https://pbs.twimg.com/profile_images/1052001602628857856/AGtSZNoO_400x400.jpg)
+
+---
+
+## Links
+
+```{r}
+#| eval: false
+#| echo: true
+
+[Silbiger Lab](https://silbigerlab.com)
+
+```
+
+
+[Silbiger Lab](https://silbigerlab.com)
+
+---
+
+## Code chunks
+
+You can add a code chunk by pressing  
+- the keyboard shortcut **Ctrl + Alt + I** (OS X: **Cmd + Option + I**)
+- Click **Code** at the top of RStudio then **+C** in green.
+
+![](libs/images/codechunk.PNG) 
+
+---
+
+# Code chunks
+
+You can control what you want printed in the html within the code chunks by giving a key and a value within the chunks after a #|
+
+![](libs/images/codechunkops.png)
+
+
+[Code Chunk Options](https://quarto.org/docs/reference/cells/cells-knitr.html)
+
+
+---
+
+## Global code chunk options in the YAML
+
+This will suppress warnings in every single code chunk as a default
+
+![](libs/images/warning.png)
+
+
+---
+
+## Totally awesome R package of the day
+
+```{r}
+#| eval: false
+#| echo: true
+
+install.packages("beepr")
+```
+
+```{r}
+#| echo: true
+
+
+library(beepr)
+beep(5)
+beep(9)
+```
+
