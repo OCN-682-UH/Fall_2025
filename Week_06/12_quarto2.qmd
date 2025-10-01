@@ -1,0 +1,232 @@
+---
+title: "Week 6b. Quarto part 2"
+author: "Nyssa Silbiger"
+date: today
+format: 
+  revealjs:
+    transition: slide  
+    background-transition: fade
+---
+
+## Outline
+
+- Working with Figures
+- Working with tables
+- Themes
+- Advanced outputs
+- Homework: Practice Quarto
+ 
+
+[Quarto Cheatsheet](https://rstudio.github.io/cheatsheets/html/quarto.html)
+
+---
+
+## Working with figures
+
+We can change lots of aspects of the figure right in our markdown document:
+  - change size
+  - change resolution
+  - change "device" (i.e. is it a .png, .pdf, etc.)
+  - save it to a specific folder
+
+---
+
+## Start a Quarto document
+
+  - Open a new .qmd file and set it up
+  - Load the appropriate libraries and make a very simple plot with the penguin package of anything (don't overthink it this is just for practice)  
+
+---
+
+## Change the size of a figure
+
+Some options:
+
+  - out-width: "70%" (makes it 70% of the width)
+  - fig-width: 3 (make the width 3 inches)
+  - fig-height: 4 (make the width 4 inches)
+  - fig-align: "center" (center aligns the figure)
+  
+We will walk through each of these together.
+[See here for all options](https://quarto.org/docs/reference/cells/cells-knitr.html)
+
+---
+
+### Label a figure
+
+We can add labels to figures and captions and subcaptions.
+
+Some options:
+
+  - label: some-fig-lab (allows you to call the figure in your quarto file and it automatically give it a number)
+  - fig-cap: "my caption" (gives your figure a caption)  
+  
+
+::: {.fragment}
+### Automatically save all your figures in your output folder
+
+This will automatically save every figure in your output folder with the fig size based on your YAML and named with the label you gave it.  
+**NOTE** Quarto automatically saves everything to the file location NOT the project location
+
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+knitr:
+  opts_chunk:
+    fig.path: "../output/" ## added the ../ because your qmd folder is in your scripts folder so we need to go up one directory and then into your output folder
+
+```
+:::
+
+---
+
+
+## Type out a table by hand
+
+::: {columns}
+::: {.column width="50%"}
+
+```{r}
+#| echo: true
+#| eval: false
+
+
+| Time  | Session | Topic    |
+|:------|:-------:|---------:|
+| _left_ | _center_| _right_ |
+| 01:00  | 1       | Anatomy |
+| 01:50  |         | *Break* |
+| 02:00  | 2       | Tables  |
+| 02:45  |         | *Break* |
+```
+
+:::
+
+::: {.column width="50%"}
+
+| Time  | Session | Topic    |
+|:------|:-------:|---------:|
+| _left_ | _center_| _right_ |
+| 01:00  | 1       | Anatomy |
+| 01:50  |         | *Break* |
+| 02:00  | 2       | Tables  |
+| 02:45  |         | *Break* |
+:::
+:::
+
+---
+
+## Tables with kable
+
+```{r}
+#| eval: false
+#| echo: true
+
+install.packages("kableExtra")
+```
+
+```{r}
+#| echo: true
+
+
+library(kableExtra)
+library(palmerpenguins)
+library(tidyverse)
+
+penguins %>%
+  group_by(species) %>%
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) %>%
+  kbl() # make it a kable table
+```
+
+**Note** You can add a label to this code chunk too just like your figure and reference your table in the text by using tbl-name in your label.
+
+---
+
+## Add some style
+
+```{r}
+#| echo: true
+
+
+library(kableExtra)
+library(palmerpenguins)
+library(tidyverse)
+
+penguins %>%
+  group_by(species) %>%
+  summarise(billmean = mean(bill_length_mm, na.rm = TRUE)) %>%
+  kbl()  %>% # make it a kable table
+  kable_classic() %>% # add a theme
+  row_spec(2, bold = TRUE, color = "white", background = "red") %>% # highlight row 2
+  kable_styling(full_width = FALSE) # don't make it so wide
+```
+
+---
+
+## More tables
+
+There are *TONS* of things you can do with tables.  Check out the link [here](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/) and also look at the gt and gtExtra packages.  
+Look up the Kable package for everything you can do with it  
+
+
+---
+
+## Themes
+
+There are so many things you can do with themes.  There are canned themes and there are also ways you can manipulate themes.  Check out the [link here](https://quarto.org/docs/output-formats/html-themes.html) for html theme options.
+
+---
+
+## Outputs
+
+There are also many different formats.  [Here is a list of different documents](https://quarto.org/docs/output-formats/all-formats.html). I really like GitHub documents because you can view them right in GitHub! PDF is also very useful.  
+
+Here is an example to make a "github flavored markdown" file. Remember to use YAML that is specific to the format you are using. So the gfm format info is [here](https://quarto.org/docs/reference/formats/markdown/gfm.html)
+
+```{r}
+#| eval: false
+#| echo: true
+
+title: "Intro to Quarto part 2"
+author: "Nyssa Silbiger"
+format: gfm
+prefer-html: true
+```
+
+
+**Note** you cannot use html interactive files in a gfm document. You will need to install the **webshot2** package which automatically turns them into screenshots if you have an html table, for example, in your file.
+
+---
+
+# Today's totally awesome R package
+
+Make a meme in R!
+
+```{r}
+#| echo: true
+#| eval: false
+
+devtools::install_github("sctyner/memer")
+```
+
+```{r}
+#| echo: true
+
+library(memer)
+meme_get("DistractedBf") %>% 
+  meme_text_distbf("Silly R package", "OCN 682 students", "actual coding")
+```
+
+---
+
+## Homework
+
+  - Take any of the data sheets you have already worked with in class and create at least one table and one figure in an Quarto file.  
+  -Create the most beautiful Quarto output you can in either an html, github doc, or pdf format. YOU MUST RENDER THE FILE  
+  - Make sure you have headings with clear explanations of what you are doing.  
+  - Practice using markdown formatting with **bold, italics, and lists** (use each of these at least once).  
+  - Make sure your outputs and scripts are saved in the appropriate folders. Keep proper coding etiquette (figures need to be pub quality as usual and you need to comment your code).
