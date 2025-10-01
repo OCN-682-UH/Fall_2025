@@ -176,7 +176,7 @@ format: html
 
 ## Let's get started
 
-![](libs/images/Quarto1.png)
+![](libs/images/Quarto1.png) 
 
 ---
 
