@@ -1,5 +1,6 @@
 # Intro to Quarto part 2
 Nyssa Silbiger
+2025-09-30
 
 <script src="Penguin2_files/libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="Penguin2_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet" />

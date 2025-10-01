@@ -1,6 +1,7 @@
 ---
 title: "Intro to Quarto part 2"
 author: "Nyssa Silbiger"
+date: today
 format: gfm
 prefer-html: true
 knitr:
