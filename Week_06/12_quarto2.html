@@ -411,17 +411,25 @@ Nyssa Silbiger
 <section id="outline" class="slide level2">
 <h2>Outline</h2>
 <ul>
-<li>Working with Figures</li>
-<li>Working with tables</li>
-<li>Themes</li>
-<li>Advanced outputs</li>
+<li>Working with Figures<br>
+</li>
+<li>Working with tables<br>
+</li>
+<li>Themes<br>
+</li>
+<li>Advanced outputs<br>
+</li>
 <li>Homework: Practice Quarto</li>
 </ul>
 <p><a href="https://rstudio.github.io/cheatsheets/html/quarto.html">Quarto Cheatsheet</a></p>
 </section>
 <section id="working-with-figures" class="slide level2">
 <h2>Working with figures</h2>
-<p>We can change lots of aspects of the figure right in our markdown document: - change size - change resolution - change “device” (i.e.&nbsp;is it a .png, .pdf, etc.) - save it to a specific folder</p>
+<p>We can change lots of aspects of the figure right in our markdown document:<br>
+- change size<br>
+- change resolution<br>
+- change “device” (i.e.&nbsp;is it a .png, .pdf, etc.)<br>
+- save it to a specific folder</p>
 </section>
 <section id="start-a-quarto-document" class="slide level2">
 <h2>Start a Quarto document</h2>
@@ -443,7 +451,7 @@ Nyssa Silbiger
 </section>
 <section class="slide level2">
 
-<h3 id="label-a-figure">Label a figure</h3>
+<h3 class="smaller" id="label-a-figure">Label a figure</h3>
 <p>We can add labels to figures and captions and subcaptions.</p>
 <p>Some options:</p>
 <ul>
@@ -452,7 +460,7 @@ Nyssa Silbiger
 </ul>
 <div class="fragment">
 <!-- -->
-<h3 id="automatically-save-all-your-figures-in-your-output-folder">Automatically save all your figures in your output folder</h3>
+<h4 id="automatically-save-all-your-figures-in-your-output-folder">Automatically save all your figures in your output folder</h4>
 <p>This will automatically save every figure in your output folder with the fig size based on your YAML and named with the label you gave it.<br>
 <strong>NOTE</strong> Quarto automatically saves everything to the file location NOT the project location</p>
 <div class="cell">
@@ -615,9 +623,10 @@ Look up the Kable package for everything you can do with it</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>title<span class="sc">:</span> <span class="st">"Intro to Quarto part 2"</span></span>
 <span id="cb6-2"><a href=""></a>author<span class="sc">:</span> <span class="st">"Nyssa Silbiger"</span></span>
-<span id="cb6-3"><a href=""></a>format<span class="sc">:</span> gfm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a href=""></a>format<span class="sc">:</span> gfm</span>
+<span id="cb6-4"><a href=""></a>prefer<span class="sc">-</span>html<span class="sc">:</span> true</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Note</strong> you cannot use html interactive files in a gfm document. You will need to install the webshot2 package which automatically turns them into screenshots if you have an html table, for example, in your file.</p>
+<p><strong>Note</strong> you cannot use html interactive files in a gfm document. You will need to install the <strong>webshot2</strong> package which automatically turns them into screenshots if you have an html table, for example, in your file.</p>
 </section>
 <section class="slide level2">
 
@@ -629,13 +638,19 @@ Look up the Kable package for everything you can do with it</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"sctyner/memer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a><span class="fu">library</span>(memer)</span>
+<span id="cb8-2"><a href=""></a><span class="fu">meme_get</span>(<span class="st">"DistractedBf"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href=""></a>  <span class="fu">meme_text_distbf</span>(<span class="st">"Silly R package"</span>, <span class="st">"OCN 682 students"</span>, <span class="st">"actual coding"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
+</div>
 <img data-src="12_quarto2_files/figure-revealjs/unnamed-chunk-8-1.png" width="250" class="r-stretch"></section>
 <section id="homework" class="slide level2">
 <h2>Homework</h2>
 <ul>
 <li>Take any of the data sheets you have already worked with in class and create at least one table and one figure in an Quarto file.<br>
--Create the most beautiful Quarto output you can in either an html, github doc, or pdf format. YOU MUST RENDER THE FILE<br>
+</li>
+<li>Create the most beautiful Quarto output you can in either an html, github doc, or pdf format. YOU MUST RENDER THE FILE<br>
 </li>
 <li>Make sure you have headings with clear explanations of what you are doing.<br>
 </li>

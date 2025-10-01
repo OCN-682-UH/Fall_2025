@@ -10,11 +10,11 @@ format:
 
 ## Outline
 
-- Working with Figures
-- Working with tables
-- Themes
-- Advanced outputs
-- Homework: Practice Quarto
+  - Working with Figures  
+  - Working with tables  
+  - Themes  
+  - Advanced outputs  
+  - Homework: Practice Quarto  
  
 
 [Quarto Cheatsheet](https://rstudio.github.io/cheatsheets/html/quarto.html)
@@ -23,11 +23,11 @@ format:
 
 ## Working with figures
 
-We can change lots of aspects of the figure right in our markdown document:
-  - change size
-  - change resolution
-  - change "device" (i.e. is it a .png, .pdf, etc.)
-  - save it to a specific folder
+We can change lots of aspects of the figure right in our markdown document:  
+  - change size  
+  - change resolution  
+  - change "device" (i.e. is it a .png, .pdf, etc.)  
+  - save it to a specific folder  
 
 ---
 
@@ -52,7 +52,7 @@ We will walk through each of these together.
 
 ---
 
-### Label a figure
+### Label a figure {.smaller}
 
 We can add labels to figures and captions and subcaptions.
 
@@ -63,7 +63,7 @@ Some options:
   
 
 ::: {.fragment}
-### Automatically save all your figures in your output folder
+#### Automatically save all your figures in your output folder
 
 This will automatically save every figure in your output folder with the fig size based on your YAML and named with the label you gave it.  
 **NOTE** Quarto automatically saves everything to the file location NOT the project location
@@ -226,7 +226,7 @@ meme_get("DistractedBf") %>%
 ## Homework
 
   - Take any of the data sheets you have already worked with in class and create at least one table and one figure in an Quarto file.  
-  -Create the most beautiful Quarto output you can in either an html, github doc, or pdf format. YOU MUST RENDER THE FILE  
+  - Create the most beautiful Quarto output you can in either an html, github doc, or pdf format. YOU MUST RENDER THE FILE  
   - Make sure you have headings with clear explanations of what you are doing.  
   - Practice using markdown formatting with **bold, italics, and lists** (use each of these at least once).  
   - Make sure your outputs and scripts are saved in the appropriate folders. Keep proper coding etiquette (figures need to be pub quality as usual and you need to comment your code).
