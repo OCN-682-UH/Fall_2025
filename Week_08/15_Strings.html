@@ -899,7 +899,7 @@ We can now use ggplot to visualize counts of positive and negative words in the 
 sent_word_counts %&gt;%
   filter(n &gt; 150) %&gt;% # take only if there are over 150 instances of it
   mutate(n = ifelse(sentiment == "negative", -n, n)) %&gt;% # add a column where if the word is negative make the count negative
-  mutate(word = reorder(word, n)) %&gt;% # sort it so it gows from largest to smallest
+  mutate(word = reorder(word, n)) %&gt;% # sort it so it goes from largest to smallest
   ggplot(aes(word, n, fill = sentiment)) +
   geom_col() +
   coord_flip() +
@@ -923,8 +923,8 @@ words&lt;-cleaned_books %&gt;%
 wordcloud2(words, shape = 'triangle', size=0.3) # make a wordcloud out of the top 100 words
 ```
 
-<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-3092ca5fc0367d7d2a34" style="width:50%;height:504px;"></div>
-<script type="application/json" data-for="htmlwidget-3092ca5fc0367d7d2a34">{"x":{"word":["mr","mrs","must","said","much","miss","one","well","every","think","now","good","might","never","time","know","little","can","nothing","though","soon","without","say","great","see","first","may","two","quite","fanny","made","thought","shall","man","dear","ever","lady","always","sir","day","make","room","emma","thing","young","sure","sister","like","however","house","away","long","elizabeth","go","give","indeed","even","last","better","many","upon","way","elinor","felt","enough","come","hope","friend","family","oh","just","done","us","mind","seemed","father","home","jane","wish","mother","still","catherine","feelings","happy","saw","something","moment","came","really","look","place","half","love","till","crawford","marianne","perhaps","yes","yet","almost"],"freq":[3015,2446,2071,2041,1935,1855,1831,1523,1456,1440,1405,1380,1369,1362,1337,1332,1295,1186,1175,1075,1058,1047,1046,981,976,972,956,876,870,862,845,839,834,830,822,821,817,813,806,797,795,790,787,772,766,742,727,725,714,699,693,689,687,684,682,664,644,643,639,635,632,631,623,618,613,608,601,593,578,572,570,569,566,563,563,558,550,550,542,541,540,539,535,534,529,525,515,509,504,503,503,501,495,495,493,492,491,489,488,476],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.01791044776119403,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"triangle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-70eb1e6ad43364befae3" style="width:50%;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-70eb1e6ad43364befae3">{"x":{"word":["mr","mrs","must","said","much","miss","one","well","every","think","now","good","might","never","time","know","little","can","nothing","though","soon","without","say","great","see","first","may","two","quite","fanny","made","thought","shall","man","dear","ever","lady","always","sir","day","make","room","emma","thing","young","sure","sister","like","however","house","away","long","elizabeth","go","give","indeed","even","last","better","many","upon","way","elinor","felt","enough","come","hope","friend","family","oh","just","done","us","mind","seemed","father","home","jane","wish","mother","still","catherine","feelings","happy","saw","something","moment","came","really","look","place","half","love","till","crawford","marianne","perhaps","yes","yet","almost"],"freq":[3015,2446,2071,2041,1935,1855,1831,1523,1456,1440,1405,1380,1369,1362,1337,1332,1295,1186,1175,1075,1058,1047,1046,981,976,972,956,876,870,862,845,839,834,830,822,821,817,813,806,797,795,790,787,772,766,742,727,725,714,699,693,689,687,684,682,664,644,643,639,635,632,631,623,618,613,608,601,593,578,572,570,569,566,563,563,558,550,550,542,541,540,539,535,534,529,525,515,509,504,503,503,501,495,495,493,492,491,489,488,476],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.01791044776119403,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"triangle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 
 ---
 # Today's totally awesome R package
@@ -963,11 +963,11 @@ Many slides modified from the following resources:
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="macros.js"></script>
 <script>var slideshow = remark.create({
-  "highlightStyle": "github",
-  "highlightLines": true,
-  "highlightSpans": true,
-  "countIncrementalSlides": false,
-  "ratio": "15:10"
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "15:10"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
