@@ -319,7 +319,7 @@ str_locate(data, pattern = "AT")
 
 But, what if we want to search for something more complicated than that... like find all the numbers, letters, or special characters.
 
-[First, a cheat sheet.](http://edrub.in/CheatSheets/cheatSheetStringr.pdf)
+[First, a cheat sheet.](https://rstudio.github.io/cheatsheets/regex.pdf)
 
 --
 
