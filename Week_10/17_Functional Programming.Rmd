@@ -149,6 +149,15 @@ df %>%
 ```
 
 ---
+# Even better! Use mutate_all to do it in even less lines of code
+
+```{r}
+df %>%
+  mutate_all(rescale01)  # mutate every column with the rescale01 function
+```
+
+
+---
 # Let's break it down
 
 There are three key steps to creating a new function:  
