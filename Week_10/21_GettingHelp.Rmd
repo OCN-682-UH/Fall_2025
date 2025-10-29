@@ -412,6 +412,7 @@ Other helpful resources and a package!
 
 I asked ChatGPT to tell me how to best use LLMs to ask for help in R and here is what it told me.  I put it into a Quarto doc for you.  Note: As a UH student you have Gemini Pro *for free*. Basic ChatGPT, but Pro is not. 
 
+[Quarto Help Document](https://raw.githack.com/OCN-682-UH/Fall_2025/main/Week_10/RHelp.html)
 
 ---
 # Make a reproducible example to ask for help
