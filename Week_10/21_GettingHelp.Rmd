@@ -551,11 +551,13 @@ The reprex code:
 
 
 ---
-#Think Pair Shaire
+# Practice on your own
 
-Make some simple code with your neighbors and add a bug.  Use datapasta and reprex to make a reproducible example and post it to our slack channel. Make sure to add your session info. 
+Make some simple code and add a bug.  Use datapasta and reprex to make a reproducible example and post it to our slack channel. Make sure to add your session info.
 
-Someone in a different area has to find the error and offer a useable solution.
+- Ask someone to fix it and find a solution.  
+- See if you can debug someone elses errors
+
 
 ---
 
