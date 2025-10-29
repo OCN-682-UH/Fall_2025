@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>rhelp</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="RHelp_files/libs/clipboard/clipboard.min.js"></script>
+<script src="RHelp_files/libs/quarto-html/quarto.js"></script>
+<script src="RHelp_files/libs/quarto-html/popper.min.js"></script>
+<script src="RHelp_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="RHelp_files/libs/quarto-html/anchor.min.js"></script>
+<link href="RHelp_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="RHelp_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="RHelp_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="RHelp_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="RHelp_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<!--
+Optionally render as slides by switching to revealjs:
+format:
+  revealjs:
+    theme: [simple, default]
+    slide-number: true
+    toc: true
+    toc-depth: 2
+    incremental: true
+    chalkboard: true
+    code-line-numbers: true
+-->
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">🎯 Learning Objectives</h2>
+<p>By the end of this session, you will be able to:</p>
+<ul>
+<li>Write clear, reproducible help requests for R (forums, GitHub, Slack, AI tools).</li>
+<li>Create minimal <strong>reprex</strong> examples and include the right diagnostics.</li>
+<li>Apply the <strong>Do’s and Don’ts</strong> of using ChatGPT (and other LLMs) for R.</li>
+<li>Compare ChatGPT, Gemini, Claude, and Copilot for common R workflows.</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Expectation for this course (OCN-682)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you post for help (class Slack/Posit Community/Stack Overflow), include: a <strong>title</strong>, a <strong>reprex</strong>, <strong>sessionInfo()</strong>, <strong>expected vs.&nbsp;actual output</strong>, and <strong>what you tried</strong>. Submissions without these will be returned for revision.</p>
+</div>
+</div>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">🧩 Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>needed <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"reprex"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>new <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(needed, <span class="fu">rownames</span>(<span class="fu">installed.packages</span>()))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(new)) <span class="fu">install.packages</span>(new)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(needed, require, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] TRUE
+
+[[2]]
+[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="why-asking-for-help-is-a-core-research-skill" class="level2">
+<h2 class="anchored" data-anchor-id="why-asking-for-help-is-a-core-research-skill">🧠 Why Asking for Help is a Core Research Skill</h2>
+<blockquote class="blockquote">
+<p>Good questions get good answers.</p>
+</blockquote>
+<p>You will often seek help via <strong>Posit Community</strong>, <strong>Stack Overflow</strong>, <strong>GitHub Issues</strong>, <strong>Reddit r/rstats</strong>, and <strong>LLMs</strong> (ChatGPT, Gemini, Claude) as well as lab Slack. Clear communication accelerates your research and helps others help you.</p>
+</section>
+<section id="the-anatomy-of-a-good-help-request" class="level2">
+<h2 class="anchored" data-anchor-id="the-anatomy-of-a-good-help-request">📐 The Anatomy of a Good Help Request</h2>
+<section id="include-these" class="level3">
+<h3 class="anchored" data-anchor-id="include-these">✅ Include These</h3>
+<ol type="1">
+<li><strong>Concise problem statement</strong></li>
+<li><strong>Minimal reproducible example (reprex)</strong></li>
+<li><strong>Session information</strong></li>
+<li><strong>Expected vs.&nbsp;actual output</strong></li>
+<li><strong>What you tried</strong></li>
+</ol>
+</section>
+<section id="reprex-template" class="level3">
+<h3 class="anchored" data-anchor-id="reprex-template">Reprex template</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># minimal data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">year =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">2021</span>), <span class="at">richness =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">8</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># problematic code</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(year, richness)) <span class="sc">+</span> <span class="fu">geom_line</span>()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># your R session</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">#### This is the example chatGPT produced and the code actually runs so it is not "problematic". One example on how ChatGPT is not always correct.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Run <code>reprex::reprex()</code> to produce a clean, copy-paste-able post for forums.</p>
+</section>
+<section id="session-info-paste-at-end-of-post" class="level3">
+<h3 class="anchored" data-anchor-id="session-info-paste-at-end-of-post">Session info (paste at end of post)</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="common-mistakes-and-fixes" class="level2">
+<h2 class="anchored" data-anchor-id="common-mistakes-and-fixes">🚫 Common Mistakes (and Fixes)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>❌ Don’t</th>
+<th>✅ Do</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“My code doesn’t work. Help!!!”</td>
+<td>Provide exact <strong>error text</strong> + <strong>minimal code</strong></td>
+</tr>
+<tr class="even">
+<td>Screenshots of code</td>
+<td>Paste code as <strong>text</strong> (fenced code blocks)</td>
+</tr>
+<tr class="odd">
+<td>Vague titles</td>
+<td>Specific titles (e.g., <em>Error with <code>mutate()</code> after join</em>)</td>
+</tr>
+<tr class="even">
+<td>Missing data context</td>
+<td>Include a <strong>small sample</strong> (<code>dput(head(df))</code>)</td>
+</tr>
+<tr class="odd">
+<td>Blame the tool</td>
+<td>Focus on <strong>debugging steps</strong> and intent</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="where-to-ask-for-help" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-ask-for-help">💬 Where to Ask for Help</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Best For</th>
+<th>Tone/Style</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Posit Community</strong></td>
+<td>Beginner–intermediate R</td>
+<td>Friendly, educational</td>
+</tr>
+<tr class="even">
+<td><strong>Stack Overflow</strong></td>
+<td>Precise code Qs</td>
+<td>Formal, concise, minimal</td>
+</tr>
+<tr class="odd">
+<td><strong>GitHub Issues</strong></td>
+<td>Package bugs &amp; feature requests</td>
+<td>Structured, technical</td>
+</tr>
+<tr class="even">
+<td><strong>Reddit r/rstats</strong></td>
+<td>Casual discussion</td>
+<td>Conversational</td>
+</tr>
+<tr class="odd">
+<td><strong>LLMs (ChatGPT, Gemini, Claude, Copilot)</strong></td>
+<td>Brainstorming, quick feedback</td>
+<td>Conversational, iterative</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dos-donts-of-using-chatgpt-for-r" class="level2">
+<h2 class="anchored" data-anchor-id="dos-donts-of-using-chatgpt-for-r">🤖 Do’s &amp; Don’ts of Using ChatGPT for R</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">✅ Do</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">🚫 Don’t</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ul>
+<li>Use it as a <strong>thinking partner</strong>, not an oracle.</li>
+<li>Provide <strong>full context</strong> (goal, reprex, error).</li>
+<li><strong>Iterate</strong>: ask for refinements (e.g., “dplyr-only version”).</li>
+<li>Ask for <strong>explanations</strong> (concepts + why the fix works).</li>
+<li><strong>Validate</strong> code locally; read docs.</li>
+<li>Keep <strong>privacy</strong>: redact sensitive/unpublished data.</li>
+</ul>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ul>
+<li>Don’t paste confidential data or credentials.</li>
+<li>Don’t copy code blindly; avoid cargo-culting.</li>
+<li>Don’t ask <strong>vague</strong> questions without a reprex.</li>
+<li>Don’t skip learning—use AI as a tutor.</li>
+<li>Don’t rely on hallucinated packages/functions—<strong>verify</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="llm-comparison-for-r-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="llm-comparison-for-r-workflows">⚖️ LLM Comparison for R Workflows</h2>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> Capabilities evolve; verify current features in your environment.</p>
+</blockquote>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>ChatGPT (GPT‑5 Thinking)</th>
+<th>Gemini 1.5 Pro</th>
+<th>Claude 3.5 Sonnet</th>
+<th>GitHub Copilot</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Strengths</strong></td>
+<td>Strong reasoning; good R examples; multi-step debugging</td>
+<td>Multimodal inputs; code comprehension</td>
+<td>Clear explanations; safe style</td>
+<td>Inline completions in RStudio/VS Code</td>
+</tr>
+<tr class="even">
+<td><strong>Weaknesses</strong></td>
+<td>May hallucinate APIs; needs verification</td>
+<td>R package edge-cases</td>
+<td>May truncate long code</td>
+<td>Limited broader context</td>
+</tr>
+<tr class="odd">
+<td><strong>Best For</strong></td>
+<td>Debugging, Quarto/Rmd authoring, doc writing</td>
+<td>Explaining figures/images; brainstorming</td>
+<td>Design choices; doc reviews</td>
+<td>Speeding up repetitive code</td>
+</tr>
+<tr class="even">
+<td><strong>Privacy</strong></td>
+<td>Organizational controls available</td>
+<td>Workspace integrations</td>
+<td>Team policy controls</td>
+<td>Enterprise options via Microsoft</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Tip:</strong> Try the <strong>same prompt</strong> across tools and compare: clarity, correctness, runnable code, and explanation depth.</p>
+</div>
+</div>
+</section>
+<section id="activity-help-me-help-you" class="level2">
+<h2 class="anchored" data-anchor-id="activity-help-me-help-you">🧪 Activity: “Help Me Help You”</h2>
+<ol type="1">
+<li><strong>Bad post → Good post</strong>: Convert a vague help request into a high‑quality one (use the rubric below).</li>
+<li><strong>Prompt the LLMs</strong>: Use identical prompts with ChatGPT, Gemini, and Claude.</li>
+<li><strong>Compare</strong>: Which result is most correct, runnable, and well‑explained?</li>
+</ol>
+<section id="what-to-think-about" class="level3">
+<h3 class="anchored" data-anchor-id="what-to-think-about">What to think about</h3>
+<ul>
+<li>Title specific and informative</li>
+<li>Minimal reprex provided</li>
+<li>Error text included</li>
+<li>Expected vs.&nbsp;actual clearly stated</li>
+<li>Steps tried listed</li>
+</ul>
+</section>
+</section>
+<section id="prompt-post-templates" class="level2">
+<h2 class="anchored" data-anchor-id="prompt-post-templates">🧰 Prompt &amp; Post Templates</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Template: Forum Post (Posit/Stack Overflow)</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<pre class="text"><code>**Title:** `mutate()` fails after `left_join()` with duplicated keys
+
+**Goal**: Summarize survey counts by site and year, then plot a trend.
+
+**Problem**: Error `object 'n' not found` when running `mutate()` after `left_join()`.
+
+**Reprex:**
+
+```r
+library(tidyverse)
+set.seed(1)
+raw &lt;- tibble(site = rep(LETTERS[1:3], each = 4),
+              year = rep(2020:2021, times = 6),
+              species = sample(c("Acropora","Porites"), 12, TRUE))
+
+sum_by &lt;- raw |&gt;
+  count(site, year, name = "n")
+
+lookup &lt;- tibble(site = LETTERS[1:3], region = c("N","C","S"))
+
+joined &lt;- left_join(sum_by, lookup, by = "site")
+
+joined |&gt;
+  mutate(prop = n / sum(n))</code></pre>
+<p><strong>Expected vs.&nbsp;actual</strong>: expected proportions by site; actual error above.</p>
+<p><strong>Session info</strong>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>What I tried</strong>: <code>group_by()</code> before <code>mutate()</code>, <code>ungroup()</code>, and <code>dplyr::summarise()</code>.</p>
+<pre><code>
+### Template: LLM Prompt (ChatGPT/Gemini/Claude)
+
+```text
+You are an R tutor. Diagnose and fix the error in my reprex. Explain **why** it occurs and give two alternative fixes (tidyverse‑native and base R). Provide runnable code only.
+
+&lt;PASTE REPREX HERE&gt;</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="debugging-patterns-to-try-before-posting" class="level2">
+<h2 class="anchored" data-anchor-id="debugging-patterns-to-try-before-posting">🔍 Debugging Patterns to Try (before posting)</h2>
+<ul>
+<li><strong>Minimal data</strong>: <code>head(df, 20)</code></li>
+<li><strong>Check types</strong>: <code>str(df)</code>, <code>is.factor(x)</code>, <code>glimpse(df)</code></li>
+<li><strong>Isolate</strong>: run each pipe step line by line</li>
+<li><strong>Name conflicts</strong>: prefer <code>dplyr::filter()</code> over <code>stats::filter()</code></li>
+<li><strong>Fresh session</strong>: restart R, <code>sessionInfo()</code></li>
+</ul>
+</section>
+<section id="ethics-reuse-and-citations" class="level2">
+<h2 class="anchored" data-anchor-id="ethics-reuse-and-citations">🛡️ Ethics, Reuse, and Citations</h2>
+<ul>
+<li>Redact sensitive or unpublished data before posting anywhere.</li>
+<li>Attribute ideas/code adapted from others (forums, blogs, AI).</li>
+<li>For manuscripts, follow journal policy on AI assistance and include a disclosure if required.</li>
+</ul>
+</section>
+<section id="quick-links" class="level2">
+<h2 class="anchored" data-anchor-id="quick-links">📚 Quick Links</h2>
+<ul>
+<li>Posit Community: <em>How to make a great reprex</em></li>
+<li>Stack Overflow: <a href="https://stackoverflow.com/questions/tagged/r">R tag</a></li>
+<li><code>reprex</code> docs: https://reprex.tidyverse.org/</li>
+<li>GitHub Issues templates (many packages include a bug report template)</li>
+</ul>
+</section>
+<section id="tchecklist" class="level2">
+<h2 class="anchored" data-anchor-id="tchecklist">✅ TChecklist</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Clear title</label></li>
+<li><label><input type="checkbox">Minimal reprex</label></li>
+<li><label><input type="checkbox">Error text</label></li>
+<li><label><input type="checkbox">Expected vs.&nbsp;actual</label></li>
+<li><label><input type="checkbox"><code>sessionInfo()</code></label></li>
+<li><label><input type="checkbox">What you tried</label></li>
+<li><label><input type="checkbox">Privacy check</label></li>
+</ul>
+<hr>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

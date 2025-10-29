@@ -1,0 +1,285 @@
+---
+#| title: "How to Ask for Help Online for R (and Use LLMs Wisely)"
+#| author: "Dr. Nyssa Silbiger"
+#| date: "`r format(Sys.Date())`"
+#| lang: en
+#| format:
+#|   html:
+#|     toc: true
+#|     toc-title: "On this page"
+#|     toc-depth: 3
+#|     theme: flatly
+#|     code-fold: true
+#|     code-summary: "Show code"
+#|     code-tools: true
+#|     code-line-numbers: true
+#|     number-sections: true
+#|     df-print: paged
+#|     link-external-newwindow: true
+#| execute:
+#|   echo: true
+#|   warning: false
+#|   message: false
+#| filters: [rmarkdown]
+#| editor: visual
+---
+
+<!--
+Optionally render as slides by switching to revealjs:
+format:
+  revealjs:
+    theme: [simple, default]
+    slide-number: true
+    toc: true
+    toc-depth: 2
+    incremental: true
+    chalkboard: true
+    code-line-numbers: true
+-->
+
+
+## 🎯 Learning Objectives
+
+By the end of this session, you will be able to:
+
+- Write clear, reproducible help requests for R (forums, GitHub, Slack, AI tools).
+- Create minimal **reprex** examples and include the right diagnostics.
+- Apply the **Do's and Don'ts** of using ChatGPT (and other LLMs) for R.
+- Compare ChatGPT, Gemini, Claude, and Copilot for common R workflows.
+
+::: callout-important
+### Expectation for this course (OCN-682)
+When you post for help (class Slack/Posit Community/Stack Overflow), include: a **title**, a **reprex**, **sessionInfo()**, **expected vs. actual output**, and **what you tried**. Submissions without these will be returned for revision.
+:::
+
+
+## 🧩 Setup
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(fig.retina = 2, dpi = 96)
+```
+
+```{r}
+#| label: packages
+#| message: false
+needed <- c("tidyverse", "reprex")
+new <- setdiff(needed, rownames(installed.packages()))
+if (length(new)) install.packages(new)
+lapply(needed, require, character.only = TRUE)
+```
+
+
+## 🧠 Why Asking for Help is a Core Research Skill
+
+> Good questions get good answers.
+
+You will often seek help via **Posit Community**, **Stack Overflow**, **GitHub Issues**, **Reddit r/rstats**, and **LLMs** (ChatGPT, Gemini, Claude) as well as lab Slack. Clear communication accelerates your research and helps others help you.
+
+
+## 📐 The Anatomy of a Good Help Request
+
+### ✅ Include These
+
+1. **Concise problem statement**
+2. **Minimal reproducible example (reprex)**
+3. **Session information**
+4. **Expected vs. actual output**
+5. **What you tried**
+
+### Reprex template
+
+```{r}
+#| label: reprex-template
+#| eval: false
+# minimal data
+library(tidyverse)
+df <- tibble(year = c(2020, 2021), richness = c(5, 8))
+
+# problematic code
+p <- ggplot(df, aes(year, richness)) + geom_line()
+print(p)
+
+# your R session
+sessionInfo()
+
+#### This is the example chatGPT produced and the code actually runs so it is not "problematic". One example on how ChatGPT is not always correct.
+```
+
+Run `reprex::reprex()` to produce a clean, copy-paste-able post for forums.
+
+
+### Session info (paste at end of post)
+
+```{r}
+#| label: session-info
+#| eval: false
+sessionInfo()
+```
+
+
+## 🚫 Common Mistakes (and Fixes)
+
+| ❌ Don’t | ✅ Do |
+|---|---|
+| "My code doesn’t work. Help!!!" | Provide exact **error text** + **minimal code** |
+| Screenshots of code | Paste code as **text** (fenced code blocks) |
+| Vague titles | Specific titles (e.g., *Error with `mutate()` after join*) |
+| Missing data context | Include a **small sample** (`dput(head(df))`) |
+| Blame the tool | Focus on **debugging steps** and intent |
+
+
+## 💬 Where to Ask for Help
+
+| Platform | Best For | Tone/Style |
+|---|---|---|
+| **Posit Community** | Beginner–intermediate R | Friendly, educational |
+| **Stack Overflow** | Precise code Qs | Formal, concise, minimal |
+| **GitHub Issues** | Package bugs & feature requests | Structured, technical |
+| **Reddit r/rstats** | Casual discussion | Conversational |
+| **LLMs (ChatGPT, Gemini, Claude, Copilot)** | Brainstorming, quick feedback | Conversational, iterative |
+
+
+## 🤖 Do's & Don'ts of Using ChatGPT for R
+
+:::: {.panel-tabset}
+### ✅ Do
+
+- Use it as a **thinking partner**, not an oracle.
+- Provide **full context** (goal, reprex, error).
+- **Iterate**: ask for refinements (e.g., “dplyr-only version”).
+- Ask for **explanations** (concepts + why the fix works).
+- **Validate** code locally; read docs.
+- Keep **privacy**: redact sensitive/unpublished data.
+
+### 🚫 Don't
+
+- Don’t paste confidential data or credentials.
+- Don’t copy code blindly; avoid cargo-culting.
+- Don’t ask **vague** questions without a reprex.
+- Don’t skip learning—use AI as a tutor.
+- Don’t rely on hallucinated packages/functions—**verify**.
+::::
+
+
+## ⚖️ LLM Comparison for R Workflows
+
+> **Note:** Capabilities evolve; verify current features in your environment.
+
+| Feature | ChatGPT (GPT‑5 Thinking) | Gemini 1.5 Pro | Claude 3.5 Sonnet | GitHub Copilot |
+|---|---|---|---|---|
+| **Strengths** | Strong reasoning; good R examples; multi-step debugging | Multimodal inputs; code comprehension | Clear explanations; safe style | Inline completions in RStudio/VS Code |
+| **Weaknesses** | May hallucinate APIs; needs verification | R package edge-cases | May truncate long code | Limited broader context |
+| **Best For** | Debugging, Quarto/Rmd authoring, doc writing | Explaining figures/images; brainstorming | Design choices; doc reviews | Speeding up repetitive code |
+| **Privacy** | Organizational controls available | Workspace integrations | Team policy controls | Enterprise options via Microsoft |
+
+::: callout-note
+**Tip:** Try the **same prompt** across tools and compare: clarity, correctness, runnable code, and explanation depth.
+:::
+
+
+## 🧪  Activity: “Help Me Help You” 
+
+1. **Bad post → Good post**: Convert a vague help request into a high‑quality one (use the rubric below).
+2. **Prompt the LLMs**: Use identical prompts with ChatGPT, Gemini, and Claude.
+3. **Compare**: Which result is most correct, runnable, and well‑explained?
+
+### What to think about
+- Title specific and informative 
+- Minimal reprex provided 
+- Error text included 
+- Expected vs. actual clearly stated 
+- Steps tried listed 
+
+
+## 🧰 Prompt & Post Templates
+
+:::: {.panel-tabset}
+### Template: Forum Post (Posit/Stack Overflow)
+
+```text
+**Title:** `mutate()` fails after `left_join()` with duplicated keys
+
+**Goal**: Summarize survey counts by site and year, then plot a trend.
+
+**Problem**: Error `object 'n' not found` when running `mutate()` after `left_join()`.
+
+**Reprex:**
+
+```r
+library(tidyverse)
+set.seed(1)
+raw <- tibble(site = rep(LETTERS[1:3], each = 4),
+              year = rep(2020:2021, times = 6),
+              species = sample(c("Acropora","Porites"), 12, TRUE))
+
+sum_by <- raw |>
+  count(site, year, name = "n")
+
+lookup <- tibble(site = LETTERS[1:3], region = c("N","C","S"))
+
+joined <- left_join(sum_by, lookup, by = "site")
+
+joined |>
+  mutate(prop = n / sum(n))
+```
+
+**Expected vs. actual**: expected proportions by site; actual error above.
+
+**Session info**:
+
+```r
+sessionInfo()
+```
+
+**What I tried**: `group_by()` before `mutate()`, `ungroup()`, and `dplyr::summarise()`.
+```
+
+### Template: LLM Prompt (ChatGPT/Gemini/Claude)
+
+```text
+You are an R tutor. Diagnose and fix the error in my reprex. Explain **why** it occurs and give two alternative fixes (tidyverse‑native and base R). Provide runnable code only.
+
+<PASTE REPREX HERE>
+```
+::::
+
+
+## 🔍 Debugging Patterns to Try (before posting)
+
+- **Minimal data**: `head(df, 20)`
+- **Check types**: `str(df)`, `is.factor(x)`, `glimpse(df)`
+- **Isolate**: run each pipe step line by line
+- **Name conflicts**: prefer `dplyr::filter()` over `stats::filter()`
+- **Fresh session**: restart R, `sessionInfo()`
+
+
+## 🛡️ Ethics, Reuse, and Citations
+
+- Redact sensitive or unpublished data before posting anywhere.
+- Attribute ideas/code adapted from others (forums, blogs, AI).
+- For manuscripts, follow journal policy on AI assistance and include a disclosure if required.
+
+
+## 📚 Quick Links
+
+- Posit Community: *How to make a great reprex*
+- Stack Overflow: [R tag](https://stackoverflow.com/questions/tagged/r)
+- `reprex` docs: https://reprex.tidyverse.org/
+- GitHub Issues templates (many packages include a bug report template)
+
+
+## ✅ TChecklist
+
+- [ ] Clear title
+- [ ] Minimal reprex
+- [ ] Error text
+- [ ] Expected vs. actual
+- [ ] `sessionInfo()`
+- [ ] What you tried
+- [ ] Privacy check
+
+
+---
+
