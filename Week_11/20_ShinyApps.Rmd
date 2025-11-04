@@ -658,7 +658,7 @@ data()
 [Check out this step by step user guide](https://docs.posit.co/shinyapps.io/guide/getting_started/)
 [Other options for publishing your app](https://shiny.posit.co/r/getstarted/shiny-basics/lesson7/)
 
-1. Make an account on [ShinyApps.io](ShinyApps.io)
+1. Make an account on [ShinyApps.io](https://ShinyApps.io)
 .center[![open account](libs/images/ShinySignup.png)]
 
 ---
@@ -715,7 +715,7 @@ Check out these resources.
 ---
 # Homework
 
-Use any data set to make a shiny app. Your app must have at least one dynamic figure and one other output (can be anything). You must publish it on shinyapps.io so that we can view your app online.
+Use any data set to make a shiny app. Your app must have at least one dynamic figure and one other output (can be anything). You must publish it on shinyapps.io so that we can view your app online. **Put the link in your ReadMe file so that we can easily find and click on it**.
 
 ### Tidy Tuesday's starting instead of online classes
  - [Data Link](https://github.com/rfordatascience/tidytuesday)
