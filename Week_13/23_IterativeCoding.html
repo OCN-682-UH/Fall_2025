@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 13</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Nyssa Silbiger" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 13
+]
+.subtitle[
+## Iterative coding and intro to models
+]
+.author[
+### Dr. Nyssa Silbiger
+]
+.institute[
+### UH Data Fundamentals Fall 2025
+]
+.date[
+### (updated: 2025-11-16)
+]
+
+---
+
+
+
+
+&lt;div style = "position:fixed; visibility: hidden"&gt;
+`$$\require{color}\definecolor{yellow}{rgb}{1, 0.8, 0.16078431372549}$$`
+`$$\require{color}\definecolor{orange}{rgb}{0.96078431372549, 0.525490196078431, 0.203921568627451}$$`
+`$$\require{color}\definecolor{green}{rgb}{0, 0.474509803921569, 0.396078431372549}$$`
+&lt;/div&gt;
+
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      yellow: ["{\\color{yellow}{#1}}", 1],
+      orange: ["{\\color{orange}{#1}}", 1],
+      green: ["{\\color{green}{#1}}", 1]
+    },
+    loader: {load: ['[tex]/color']},
+    tex: {packages: {'[+]': ['color']}}
+  }
+});
+&lt;/script&gt;
+
+&lt;style&gt;
+.yellow {color: #FFCC29;}
+.orange {color: #F58634;}
+.green {color: #007965;}
+&lt;/style&gt;
+
+
+
+
+---
+# Outline of class
+
+Working with iterative data and intro to models 
+
+1. Quiz!
+1. Final Project Review
+1. for loops
+2. map functions from purrr (more cat puns!)
+1. Intro to basic linear modeling
+2. Viewing results in base R, broom, and modelsummary
+3. Running many models at the same time with purrr
+4. Intro to tidy models
+
+
+&lt;img src = "https://paulvanderlaken.files.wordpress.com/2018/12/pp550x5501.jpg", width=30%/&gt;
+
+---
+# Final Project review
+
+1. Make sure to read the instructions very carefully 
+  - Note: your final project needs to be in a brand new, stand-along repository within the OCN 682 Github Organization (aka where all our repos are now) 
+  
+--
+
+2. Your completed repo for your final project is due at 1pm on 12/02, regardless of when you present. NO changes will be allowed after class has started so that it is fair to everyone.  
+
+--
+3. Sign up for a presentation time [here](https://docs.google.com/spreadsheets/d/1CW4oauRyRBKb4bs_lzfC--L2SCXdEC5B3_27vmOXfx8/edit?gid=0#gid=0) 
+
+---
+# Set-up your script
+
+
+``` r
+library(tidyverse)
+library(here)
+```
+
+
+---
+# for loops
+
+**for loops** are one way to run an iterative process (do something over and over again). However, with the *tidyverse* you can avoid needing loops for almost any basic coding needs.  Where it does come in handy is in population modeling and Bayesian modeling, for example. Also, it is integral to programming and is happening "under the hood" whether you use them or not.
+
+
+
+---
+# for loops
+
+For loops have two major parts: an indexing statement and a command (or set of commands) to repeat.  The coding is in base R.
+
+The command looks like this:  
+`for(index in sequence){`  
+    `command to repeat}`
+
+.center[
+&lt;img src="https://media.geeksforgeeks.org/wp-content/uploads/20200404100137/for-loop-r2.png"/&gt;]
+
+
+---
+# Simple for loop
+
+Let's ask R to print a statement telling us what year it is along a sequence of years.  
+
+Start with the simple code for one year
+
+``` r
+print(paste("The year is", 2000))
+```
+
+```
+## [1] "The year is 2000"
+```
+
+--
+
+Put it in a for loop.
+
+
+``` r
+years&lt;-c(2015:2021)
+
+for (i in years){ # set up the for loop where i is the index
+  print(paste("The year is", i)) # loop over i
+}
+```
+
+```
+## [1] "The year is 2015"
+## [1] "The year is 2016"
+## [1] "The year is 2017"
+## [1] "The year is 2018"
+## [1] "The year is 2019"
+## [1] "The year is 2020"
+## [1] "The year is 2021"
+```
+
+---
+# Simple for loop
+
+What we just did printed something over and over, but it did not save it anywhere.  Let's say you want to save a new vector with all the years.  To do this we need to pre-allocate space and tell R where it is going to be saved.
+
+--
+Create an empty dataframe called `year_data` with columns for `year` and `year_name` .
+
+
+
+``` r
+#Pre-allocate space for the for loop
+# empty matrix that is as long as the years vector
+ year_data&lt;-tibble(year =  rep(NA, length(years)),  # column name for year
+                   year_name = rep(NA, length(years))) # column name for the year name
+
+year_data
+```
+
+```
+## # A tibble: 7 × 2
+##   year  year_name
+##   &lt;lgl&gt; &lt;lgl&gt;    
+## 1 NA    NA       
+## 2 NA    NA       
+## 3 NA    NA       
+## 4 NA    NA       
+## 5 NA    NA       
+## 6 NA    NA       
+## 7 NA    NA
+```
+---
+# Simple for loop
+
+Add the for loop
+
+One line at a time.  Let's first add in the column that is going to have all the names in it. Notice that I added an index `i` in the column name. I also am having the index go from 1:length(years), which is 1:7.  I use `length()` because it allows me to change the number of years in the vector without having to change the for loop. 
+
+
+``` r
+for (i in 1:length(years)){ # set up the for loop where i is the index
+* year_data$year_name[i]&lt;-paste("The year is", years[i]) # loop over i
+}
+
+year_data
+```
+
+```
+## # A tibble: 7 × 2
+##   year  year_name       
+##   &lt;lgl&gt; &lt;chr&gt;           
+## 1 NA    The year is 2015
+## 2 NA    The year is 2016
+## 3 NA    The year is 2017
+## 4 NA    The year is 2018
+## 5 NA    The year is 2019
+## 6 NA    The year is 2020
+## 7 NA    The year is 2021
+```
+
+---
+# Simple for loop
+
+Fill in the year column too
+
+
+``` r
+for (i in 1:length(years)){ # set up the for loop where i is the index
+  year_data$year_name[i]&lt;-paste("The year is", years[i]) # loop over year name
+* year_data$year[i]&lt;-years[i] # loop over year
+}
+
+year_data
+```
+
+```
+## # A tibble: 7 × 2
+##    year year_name       
+##   &lt;int&gt; &lt;chr&gt;           
+## 1  2015 The year is 2015
+## 2  2016 The year is 2016
+## 3  2017 The year is 2017
+## 4  2018 The year is 2018
+## 5  2019 The year is 2019
+## 6  2020 The year is 2020
+## 7  2021 The year is 2021
+```
+---
+# Using loops to read in multiple .csv files
+
+Let's say you have multiple data files where you want to perform the same action to each. You can use a for loop to do this. 
+
+In the data folder you will see a subfolder called *cond_data*.  Here I have 3 files of salinity and temperature data collected from Mo'orea from a spatial survey.
+
+Read in one of the files so that you can see what it looks like.
+
+
+``` r
+testdata&lt;-read_csv(here("Week_13", "data", "cond_data","011521_CT316_1pcal.csv"))
+
+glimpse(testdata)
+```
+
+```
+## Rows: 1,474
+## Columns: 3
+## $ date        &lt;dttm&gt; 2021-01-15 08:24:40, 2021-01-15 08:24:50, 2021-01-15 08:2…
+## $ Temperature &lt;dbl&gt; 23.28, 23.28, 23.28, 23.28, 23.28, 23.27, 23.28, 23.28, 23…
+## $ Salinity    &lt;dbl&gt; 34.83656, 34.59268, 34.90039, 34.72214, 34.53604, 34.42168…
+```
+
+---
+# list files in a directory
+
+
+``` r
+# point to the location on the computer of the folder
+CondPath&lt;-here("Week_13", "data", "cond_data")
+
+# list all the files in that path with a specific pattern
+# In this case we are looking for everything that has a .csv in the filename
+
+# you can use regex to be more specific if you are looking for certain patterns in filenames
+files &lt;- dir(path = CondPath,pattern = ".csv")
+
+files
+```
+
+```
+## [1] "011521_CT316_1pcal.csv" "011621_CT316_1pcal.csv" "011721_CT354_1pcal.csv"
+```
+---
+# pre-allocate space for the loop
+Let's calculate the mean temperature and salinity from each file and save it
+
+
+``` r
+# pre-allocate space
+# make an empty dataframe that has one row for each file and 3 columns
+ cond_data&lt;-tibble(filename =  rep(NA, length(files)),  # column name for year
+                   mean_temp = rep(NA, length(files)), # column name for the mean temperature
+                   mean_sal = rep(NA, length(files)), # column name for the mean salinity
+                   ) # column name for the year name
+
+
+cond_data
+```
+
+```
+## # A tibble: 3 × 3
+##   filename mean_temp mean_sal
+##   &lt;lgl&gt;    &lt;lgl&gt;     &lt;lgl&gt;   
+## 1 NA       NA        NA      
+## 2 NA       NA        NA      
+## 3 NA       NA        NA
+```
+
+
+
+---
+# for loop
+
+write basic code to calculate a mean and build out
+
+``` r
+raw_data&lt;-read_csv(paste0(CondPath,"/",files[1])) # test by reading in the first file and see if it works
+head(raw_data)
+```
+
+```
+## # A tibble: 6 × 3
+##   date                Temperature Salinity
+##   &lt;dttm&gt;                    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 2021-01-15 08:24:40        23.3     34.8
+## 2 2021-01-15 08:24:50        23.3     34.6
+## 3 2021-01-15 08:25:00        23.3     34.9
+## 4 2021-01-15 08:25:10        23.3     34.7
+## 5 2021-01-15 08:25:20        23.3     34.5
+## 6 2021-01-15 08:25:30        23.3     34.4
+```
+
+``` r
+mean_temp&lt;-mean(raw_data$Temperature, na.rm = TRUE) # calculate a mean
+mean_temp
+```
+
+```
+## [1] 29.19296
+```
+---
+# Turn it into a for loop
+
+
+``` r
+*for (i in 1:length(files)){ # loop over 1:3 the number of files
+  
+  
+} 
+```
+
+--
+
+# Add in the loop over the raw data
+
+
+``` r
+for (i in 1:length(files)){ # loop over 1:3 the number of files 
+
+*raw_data&lt;-read_csv(paste0(CondPath,"/",files[i]))
+*glimpse(raw_data)
+
+} 
+```
+
+```
+## Rows: 1,474
+## Columns: 3
+## $ date        &lt;dttm&gt; 2021-01-15 08:24:40, 2021-01-15 08:24:50, 2021-01-15 08:2…
+## $ Temperature &lt;dbl&gt; 23.28, 23.28, 23.28, 23.28, 23.28, 23.27, 23.28, 23.28, 23…
+## $ Salinity    &lt;dbl&gt; 34.83656, 34.59268, 34.90039, 34.72214, 34.53604, 34.42168…
+```
+
+```
+## Rows: 874
+## Columns: 3
+## $ date        &lt;dttm&gt; 2021-01-16 08:16:00, 2021-01-16 08:16:10, 2021-01-16 08:1…
+## $ Temperature &lt;dbl&gt; 23.59, 23.60, 23.61, 23.60, 23.60, 23.59, 23.59, 23.59, 23…
+## $ Salinity    &lt;dbl&gt; 34.04744, 33.96974, 33.93468, 33.91809, 33.87572, 33.85311…
+```
+
+```
+## Rows: 1,004
+## Columns: 3
+## $ date        &lt;dttm&gt; 2021-01-17 08:20:00, 2021-01-17 08:20:10, 2021-01-17 08:2…
+## $ Temperature &lt;dbl&gt; 23.73000, 23.72900, 23.73000, 23.73000, 23.73000, 23.73000…
+## $ Salinity    &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, 33.48506, 33.47455, 33.45649, …
+```
+
+---
+# Add in the columns
+
+First, add in the filename for each row
+
+``` r
+for (i in 1:length(files)){ # loop over 1:3 the number of files 
+
+raw_data&lt;-read_csv(paste0(CondPath,"/",files[i]))
+*#glimpse(raw_data)
+
+*cond_data$filename[i]&lt;-files[i]
+  
+} 
+
+cond_data
+```
+
+```
+## # A tibble: 3 × 3
+##   filename               mean_temp mean_sal
+##   &lt;chr&gt;                  &lt;lgl&gt;     &lt;lgl&gt;   
+## 1 011521_CT316_1pcal.csv NA        NA      
+## 2 011621_CT316_1pcal.csv NA        NA      
+## 3 011721_CT354_1pcal.csv NA        NA
+```
+---
+# Add in means
+
+
+``` r
+for (i in 1:length(files)){ # loop over 1:3 the number of files 
+
+raw_data&lt;-read_csv(paste0(CondPath,"/",files[i]))
+#glimpse(raw_data)
+
+cond_data$filename[i]&lt;-files[i]
+*cond_data$mean_temp[i]&lt;-mean(raw_data$Temperature, na.rm =TRUE)
+*cond_data$mean_sal[i]&lt;-mean(raw_data$Salinity, na.rm =TRUE)
+} 
+
+cond_data
+```
+
+```
+## # A tibble: 3 × 3
+##   filename               mean_temp mean_sal
+##   &lt;chr&gt;                      &lt;dbl&gt;    &lt;dbl&gt;
+## 1 011521_CT316_1pcal.csv      29.2     33.7
+## 2 011621_CT316_1pcal.csv      29.7     33.3
+## 3 011721_CT354_1pcal.csv      29.2     33.0
+```
+---
+# {purrr}
+
+[purrr cheatsheet](https://github.com/rstudio/cheatsheets/blob/master/purrr.pdf)
+
+Now, I will teach you to do the exact same thing, but with tidyverse style language.
+
+*"purrr enhances R’s functional programming (FP) toolkit by providing a complete and consistent set of tools for working with functions and vectors. If you’ve never heard of FP before, the best place to start is the family of map() functions which allow you to replace many for loops with code that is both more succinct and easier to read. The best place to learn about the map() functions is the [iteration chapter](https://r4ds.had.co.nz/iteration.html) in R for data science."*
+
+
+" ...it’s designed to make your pure functions purrr." - Hadley Wickham
+
+.center[
+&lt;img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKyS_Q6XsvEX9b07wgTLNaQe8yIZRDCqg_1Q&amp;usqp=CAU"/&gt;]
+
+
+---
+# map functions
+
+The pattern of looping over a vector, doing something to each element and saving the results is so common that the purrr package provides a family of functions to do it for you. There is one function for each type of output:
+
+- `map()` makes a list.
+- `map_lgl()` makes a logical vector.
+- `map_int()` makes an integer vector.
+- `map_dbl()` makes a double vector.
+- `map_chr()` makes a character vector.
+- `map_df()` makes a dataframe
+
+Each function takes a vector as input, applies a function to each piece, and then returns a new vector that’s the same length (and has the same names) as the input.
+
+.center[&lt;img src="https://d33wubrfki0l68.cloudfront.net/12f6af8404d9723dff9cc665028a35f07759299d/d0d9a/diagrams/functionals/map-list.png", width=35%/&gt;]
+
+.foot-note[
+[R4DS](https://r4ds.had.co.nz/iteration.html)
+]
+---
+# Simple example
+
+There 3 ways to do the same thing in a map() function
+
+--
+
+**Use a canned function that already exists**
+
+Let's calculate the mean from a set of random numbers and do it 10 times
+
+Create a vector from 1:10
+
+``` r
+*1:10 # a vector from 1 to 10 (we are going to do this 10 times)
+```
+
+--
+for each time 1:10 make a vector of 15 random numbers based on a normal distribution
+
+``` r
+1:10 %&gt;% # a vector from 1 to 10 (we are going to do this 10 times) %&gt;% # the vector to iterate over
+* map(rnorm, n = 15) # calculate 15 random numbers based on a normal distribution in a list
+```
+
+```
+## [[1]]
+##  [1]  0.97969033  0.35781524 -0.02097906  1.05513823  0.34506028  0.79304829
+##  [7]  1.37401566  1.36170877  2.31912065  1.08169140  1.51666172  1.18154098
+## [13]  3.34281025  2.66181101 -0.09564082
+## 
+## [[2]]
+##  [1]  0.90236994  2.85756623  2.49876094  2.20657185  1.46873693  1.39408556
+##  [7]  1.64728668 -0.66135903  0.06512584  1.64374471  0.52171325  2.28603742
+## [13]  1.65827826  0.42901583  2.71534299
+## 
+## [[3]]
+##  [1] 3.019277 4.443056 2.764945 3.136448 1.810332 3.810400 2.091440 3.162958
+##  [9] 1.715101 4.857490 5.646958 3.673611 2.055683 3.685299 2.854191
+## 
+## [[4]]
+##  [1] 3.120966 4.340266 4.024681 2.592903 3.257507 4.436445 2.832014 4.156775
+##  [9] 4.800296 3.672928 3.394813 3.643592 3.463510 4.494951 3.620438
+## 
+## [[5]]
+##  [1] 5.305403 5.708456 5.571155 4.094016 6.694402 5.971513 5.924000 6.644386
+##  [9] 5.229158 4.841007 5.020612 6.825381 6.000213 5.815451 4.708310
+## 
+## [[6]]
+##  [1] 3.371822 5.897249 5.481351 6.172243 7.842937 5.272949 8.467179 6.128014
+##  [9] 6.839748 5.425392 6.391656 6.558251 6.487920 6.017932 4.800825
+## 
+## [[7]]
+##  [1] 4.827378 7.432153 6.615652 7.086021 6.636659 6.578908 8.902455 7.687543
+##  [9] 8.304133 7.696515 8.462543 6.812761 6.325289 7.040695 8.792346
+## 
+## [[8]]
+##  [1] 8.990746 8.845134 7.573279 7.909619 8.487616 8.202735 6.053190 8.282593
+##  [9] 8.303734 8.805767 8.370140 8.493915 7.260661 7.066345 6.369143
+## 
+## [[9]]
+##  [1] 10.113831  9.173780 10.516550  7.481771  8.771691 10.428343  9.176615
+##  [8]  8.683267  7.670423  9.257827  9.913348  9.472129  7.859284  8.845960
+## [15]  8.915127
+## 
+## [[10]]
+##  [1]  9.549555  9.483267 10.342892 11.087518 11.266545 12.305467  9.227449
+##  [8] 10.359383  8.841082  9.640448 11.449750  9.984304  8.490193 10.584993
+## [15]  8.842408
+```
+
+---
+# Simple example
+
+Calculate the mean from each list
+
+``` r
+1:10 %&gt;% # a vector from 1 to 10 (we are going to do this 10 times) %&gt;% # the vector to iterate over
+  map(rnorm, n = 15)  %&gt;% # calculate 15 random numbers based on a normal distribution in a list 
+* map_dbl(mean) # calculate the mean. It is now a vector which is type "double"
+```
+
+```
+##  [1] 0.5679285 1.8335654 2.8247963 4.1893246 5.1965508 6.2877819 7.3490690
+##  [8] 8.3769227 9.3327740 9.6746994
+```
+
+---
+# Same thing different notation...
+
+**Make your own function**
+
+
+``` r
+1:10 %&gt;% # list 1:10
+  map(function(x) rnorm(15, x)) %&gt;% # make your own function
+  map_dbl(mean)
+```
+
+```
+##  [1] 0.4986542 2.1161491 2.8812098 4.2031390 4.7810298 6.1083077 7.1590175
+##  [8] 8.1369632 9.0250381 9.6907551
+```
+
+--
+
+**Use a formula when you want to change the arguments within the function**
+
+
+``` r
+1:10 %&gt;%
+  map(~ rnorm(15, .x)) %&gt;% # changes the arguments inside the function
+  map_dbl(mean)
+```
+
+```
+##  [1] 0.5439586 2.2102057 3.1554728 3.9297468 5.0717022 6.3348831 6.4049550
+##  [8] 8.0160214 8.8519508 9.6353808
+```
+
+
+---
+# Bring in files using purrr instead of a for loop
+
+Reminder: find the files
+
+``` r
+# point to the location on the computer of the folder
+CondPath&lt;-here("Week_13", "data", "cond_data")
+files &lt;- dir(path = CondPath,pattern = ".csv")
+
+files
+```
+
+```
+## [1] "011521_CT316_1pcal.csv" "011621_CT316_1pcal.csv" "011721_CT354_1pcal.csv"
+```
+
+--
+Or, we can get the full file names in one less step by doing this...
+
+
+``` r
+files &lt;- dir(path = CondPath,pattern = ".csv", full.names = TRUE)
+#save the entire path name
+files
+```
+
+```
+## [1] "C:/Users/nyssa/Desktop/Repositories/Fall_2025/Week_13/data/cond_data/011521_CT316_1pcal.csv"
+## [2] "C:/Users/nyssa/Desktop/Repositories/Fall_2025/Week_13/data/cond_data/011621_CT316_1pcal.csv"
+## [3] "C:/Users/nyssa/Desktop/Repositories/Fall_2025/Week_13/data/cond_data/011721_CT354_1pcal.csv"
+```
+
+---
+# read in the files
+
+Next, read in the files using map instead of a for loop while retaining the filename as a column. 
+
+
+
+``` r
+data&lt;-files %&gt;%
+  set_names()%&gt;% # set's the id of each list to the file name
+  map_df(read_csv,.id = "filename") # map everything to a dataframe and put the id in a column called filename
+
+data
+```
+
+```
+## # A tibble: 3,352 × 4
+##    filename                             date                Temperature Salinity
+##    &lt;chr&gt;                                &lt;dttm&gt;                    &lt;dbl&gt;    &lt;dbl&gt;
+##  1 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:24:40        23.3     34.8
+##  2 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:24:50        23.3     34.6
+##  3 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:25:00        23.3     34.9
+##  4 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:25:10        23.3     34.7
+##  5 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:25:20        23.3     34.5
+##  6 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:25:30        23.3     34.4
+##  7 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:25:40        23.3     34.3
+##  8 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:25:50        23.3     34.3
+##  9 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:26:00        23.3     34.2
+## 10 C:/Users/nyssa/Desktop/Repositories… 2021-01-15 08:26:10        23.3     34.1
+## # ℹ 3,342 more rows
+```
+
+---
+# calculate means
+
+Now we have a regular dataframe and we can calculate means in the way we already know how! group_by filename and use summarize
+
+
+``` r
+data&lt;-files %&gt;%
+  set_names()%&gt;% # set's the id of each list to the file name
+  map_df(read_csv,.id = "filename") %&gt;% # map everything to a dataframe and put the id in a column called filename
+* group_by(filename) %&gt;%
+* summarise(mean_temp = mean(Temperature, na.rm = TRUE),
+*           mean_sal = mean(Salinity,na.rm = TRUE))
+
+data
+```
+
+```
+## # A tibble: 3 × 3
+##   filename                                                    mean_temp mean_sal
+##   &lt;chr&gt;                                                           &lt;dbl&gt;    &lt;dbl&gt;
+## 1 C:/Users/nyssa/Desktop/Repositories/Fall_2025/Week_13/data…      29.2     33.7
+## 2 C:/Users/nyssa/Desktop/Repositories/Fall_2025/Week_13/data…      29.7     33.3
+## 3 C:/Users/nyssa/Desktop/Repositories/Fall_2025/Week_13/data…      29.2     33.0
+```
+
+---
+# Other uses
+ 
+Maps and loops are awesome for more complicated processes too. For example, you could plot something and save it automatically from each file using similar code.
+
+Read these chapters in [R4DS](https://r4ds.had.co.nz/iteration.html) and [Advanced R](https://adv-r.hadley.nz/functionals.html) to see all the fancy shortcuts you can do with the purrr package
+
+---
+
+Intro to modeling 
+
+1. Intro to basic linear modeling
+2. Viewing results in base R, broom, and modelsummary
+3. Running many models at the same time with purrr
+4. Intro to tidy models
+
+
+![backstreet](libs\img\backstreet.jpg)
+
+---
+# Set-up a new script
+
+
+
+
+``` r
+install.packages('modelsummary') # to show model output
+install.packages('tidymodels') # for tidy models
+install.packages('broom') # for clean model output
+install.packages('flextable') # to look at model results in a nice table
+install.packages('peformance') # to check model assumptions
+install.packages('see') # needs to be installed, but does not need to be loaded in the library, required for performance
+```
+
+
+
+
+``` r
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(broom)
+library(performance) 
+library(modelsummary)
+library(tidymodels)
+```
+
+
+.pull-left[
+&lt;img src="https://user-images.githubusercontent.com/987057/82849698-05ba5700-9ec7-11ea-93a0-67dcd9151848.png", width=40%/&gt;
+]
+
+.pull-right[
+&lt;img src="https://www.tidymodels.org/images/tidymodels.png", width=40%/&gt;
+]
+
+---
+# Intro to basic linear modeling
+
+#### WARNING: This is NOT a stats class.  Please make sure you understand the theory behind the statistics that you are using before you use them. Also, even though we spent the semester learning about cleaning and visualization you MUST use stats to interpret your data. 
+
+Today, I am going to show you a few cool packages that help with some modeling. There are TONS of packages and you should choose what makes the most sense to your unique type of data. 
+
+---
+# Anatomy of a basic linear model
+
+To run a **simple linear model** you use the following formula: 
+
+`mod&lt;-lm(y~x, data = df)`  
+
+lm = linear model, y = dependent variable, x = independent variable(s), df = dataframe.
+
+You read this as *y is a function of x*  
+
+--
+
+**Multiple regression**  
+`mod&lt;-lm(y~x1 + x2, data = df)`  
+
+--
+
+**Interaction term**  
+`mod&lt;-lm(y~x1*x2, data = df)`  the * will compute x1+x2+x1:x2
+
+
+
+---
+# Model the penguin dataset
+We've tidied and visualized the data and have our set of hypotheses that we want to test. Now we can start modeling... 
+
+.center[
+&lt;img src="23_IterativeCoding_files/figure-html/unnamed-chunk-26-1.png" width="35%" /&gt;
+
+
+]
+
+
+``` r
+# Linear model of Bill depth ~ Bill length by species
+Peng_mod&lt;-lm(bill_length_mm ~ bill_depth_mm*species, data = penguins)
+```
+
+---
+# Check model assumptions with performace
+
+.pull-left[
+ALWAYS check the assumptions of your specific model. Make sure you know what your model is doing behind the scenes and that you meet all assumptions before interpreting your results.  The [{performance}](https://github.com/easystats/performance) package makes this super easy. 
+
+
+
+``` r
+check_model(Peng_mod) # check assumptions of an lm model
+```
+]
+
+.pull-right[
+![](23_IterativeCoding_files/figure-html/plot1-out-1.png)&lt;!-- --&gt;
+]
+---
+# View results: base R
+
+### ANOVA Table
+
+
+``` r
+anova(Peng_mod)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Response: bill_length_mm
+##                        Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## bill_depth_mm           1  561.6   561.6  93.965 &lt; 2.2e-16 ***
+## species                 2 7460.3  3730.2 624.151 &lt; 2.2e-16 ***
+## bill_depth_mm:species   2  134.3    67.1  11.232 1.898e-05 ***
+## Residuals             336 2008.1     6.0                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# View results: base R
+
+### Coefficients (effect size) with error 
+
+
+``` r
+summary(Peng_mod)
+```
+
+```
+## 
+## Call:
+## lm(formula = bill_length_mm ~ bill_depth_mm * species, data = penguins)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.7888 -1.5415  0.0575  1.5873 10.3590 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     23.0681     3.0165   7.647 2.18e-13 ***
+## bill_depth_mm                    0.8570     0.1641   5.224 3.08e-07 ***
+## speciesChinstrap                -9.6402     5.7154  -1.687 0.092590 .  
+## speciesGentoo                   -5.8386     4.5353  -1.287 0.198850    
+## bill_depth_mm:speciesChinstrap   1.0651     0.3100   3.435 0.000666 ***
+## bill_depth_mm:speciesGentoo      1.1637     0.2789   4.172 3.84e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.445 on 336 degrees of freedom
+##   (2 observations deleted due to missingness)
+## Multiple R-squared:  0.8024,	Adjusted R-squared:  0.7995 
+## F-statistic: 272.9 on 5 and 336 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+# View results with broom
+
+These results are not in a clean form and it is hard to extract specific values. Using [{broom}](https://cran.r-project.org/web/packages/broom/vignettes/broom.html) we can "tidy" the results so that it is easier to view and extract. Functions tidy(), glance(), and augment() will clean up your results
+
+
+``` r
+# Tidy coefficients
+coeffs&lt;-tidy(Peng_mod) # just put tidy() around it
+coeffs
+```
+
+```
+## # A tibble: 6 × 5
+##   term                           estimate std.error statistic  p.value
+##   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                      23.1       3.02       7.65 2.18e-13
+## 2 bill_depth_mm                     0.857     0.164      5.22 3.08e- 7
+## 3 speciesChinstrap                 -9.64      5.72      -1.69 9.26e- 2
+## 4 speciesGentoo                    -5.84      4.54      -1.29 1.99e- 1
+## 5 bill_depth_mm:speciesChinstrap    1.07      0.310      3.44 6.66e- 4
+## 6 bill_depth_mm:speciesGentoo       1.16      0.279      4.17 3.84e- 5
+```
+---
+# View results with broom
+
+**glance** extracts R-squared, AICs, etc of the model
+
+``` r
+# tidy r2, etc
+results&lt;-glance(Peng_mod) 
+results
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.802         0.799  2.44      273. 5.69e-116     5  -788. 1590. 1617.
+## # ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+---
+# View results with broom
+
+**augment** add residuals and predicted values to your original data and requires that you put both the model and data
+
+``` r
+# tidy residuals, etc
+
+resid_fitted&lt;-augment(Peng_mod)
+resid_fitted
+```
+
+```
+## # A tibble: 342 × 10
+##    .rownames bill_length_mm bill_depth_mm species .fitted   .resid    .hat
+##    &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt; &lt;fct&gt;     &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+##  1 1                   39.1          18.7 Adelie     39.1  0.00553 0.00719
+##  2 2                   39.5          17.4 Adelie     38.0  1.52    0.0107 
+##  3 3                   40.3          18   Adelie     38.5  1.81    0.00716
+##  4 5                   36.7          19.3 Adelie     39.6 -2.91    0.0107 
+##  5 6                   39.3          20.6 Adelie     40.7 -1.42    0.0295 
+##  6 7                   38.9          17.8 Adelie     38.3  0.577   0.00797
+##  7 8                   39.2          19.6 Adelie     39.9 -0.666   0.0137 
+##  8 9                   34.1          18.1 Adelie     38.6 -4.48    0.00690
+##  9 10                  42            20.2 Adelie     40.4  1.62    0.0221 
+## 10 11                  37.8          17.1 Adelie     37.7  0.0768  0.0136 
+## # ℹ 332 more rows
+## # ℹ 3 more variables: .sigma &lt;dbl&gt;, .cooksd &lt;dbl&gt;, .std.resid &lt;dbl&gt;
+```
+
+---
+# Results in {modelsummary}
+
+[{modelsummary}](https://vincentarelbundock.github.io/modelsummary/) creates tables and plots to summarize statistical models and data in `R`. 
+
+modelsummary includes two families of functions:
+
+Model Summary  
+`modelsummary`: Regression tables with side-by-side models.  
+`modelsummary_wide`: Regression tables for categorical response models or grouped coefficients.  
+`modelplot`: Coefficient plots.  
+
+Data Summary  
+`datasummary`: Powerful tool to create (multi-level) cross-tabs and data summaries.  
+`datasummary_balance`: Balance tables with subgroup statistics and difference in means (aka “Table 1”).  
+`datasummary_correlation`: Correlation tables.  
+`datasummary_skim`: Quick overview (“skim”) of a dataset.  
+`datasummary_df`: Turn dataframes into nice tables with titles, notes, etc.  
+---
+# Results in {modelsummary}
+
+Export summary tables to word, markdown, or tex document. You can also modify the tables to make them pub quality.  
+
+
+Let's compare the Peng_mod with one that does not have species as an interaction term.
+
+``` r
+# New model
+Peng_mod_noX&lt;-lm(bill_length_mm ~ bill_depth_mm, data = penguins)
+
+#Make a list of models and name them
+models&lt;-list("Model with interaction" = Peng_mod,
+             "Model with no interaction" = Peng_mod_noX)
+
+#Save the results as a .docx
+modelsummary(models, output = here("Week_13","output","table.docx"))
+```
+
+
+---
+# Modelplot 
+
+.pull-left[
+Canned coefficient [modelplots](https://vincentarelbundock.github.io/modelsummary/articles/modelplot.html)
+
+
+``` r
+#install.packages(wesanderson)
+library(wesanderson)
+
+modelplot(models) +
+    labs(x = 'Coefficients', 
+         y = 'Term names') +
+    scale_color_manual(values = wes_palette('Darjeeling1'))
+```
+]
+
+
+.pull-right[
+![](23_IterativeCoding_files/figure-html/plot2-out-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Many models with purrr, dplyr, and broom
+
+Let's say you want to plot and compare lots of different models at the same time and view the results. For example, instead of using species as an interaction term, let's make an individual model for every species.
+
+We can essentially make a set of lists that have each dataset that we want to model and use the `map` functions to run the same model to every dataset. We will test it step by step
+
+--
+
+First, let's call the penguin data and create a list for the data by each species.  We do this using `nest()`. We are going to nest the data by species. 
+
+
+``` r
+ models&lt;- penguins %&gt;%
+* ungroup()%&gt;% # the penguin data are grouped so we need to ungroup them
+*   nest(.by = species) # nest all the data by species
+
+models
+```
+
+```
+## # A tibble: 3 × 2
+##   species   data              
+##   &lt;fct&gt;     &lt;list&gt;            
+## 1 Adelie    &lt;tibble [152 × 6]&gt;
+## 2 Gentoo    &lt;tibble [124 × 6]&gt;
+## 3 Chinstrap &lt;tibble [68 × 6]&gt;
+```
+
+---
+# Many models with purrr, dplyr, and broom
+
+map a model to each of the groups in the list
+
+``` r
+ models&lt;- penguins %&gt;%
+  ungroup()%&gt;% # the penguin data are grouped so we need to ungroup them
+  nest(.by = species) %&gt;% # nest all the data by species 
+* mutate(fit = map(data, ~lm(bill_length_mm~body_mass_g, data = .)))
+  
+  models
+```
+
+```
+## # A tibble: 3 × 3
+##   species   data               fit   
+##   &lt;fct&gt;     &lt;list&gt;             &lt;list&gt;
+## 1 Adelie    &lt;tibble [152 × 6]&gt; &lt;lm&gt;  
+## 2 Gentoo    &lt;tibble [124 × 6]&gt; &lt;lm&gt;  
+## 3 Chinstrap &lt;tibble [68 × 6]&gt;  &lt;lm&gt;
+```
+
+
+
+``` r
+models$fit # shows you each of the 3 models
+```
+
+```
+## [[1]]
+## 
+## Call:
+## lm(formula = bill_length_mm ~ body_mass_g, data = .)
+## 
+## Coefficients:
+## (Intercept)  body_mass_g  
+##   26.994139     0.003188  
+## 
+## 
+## [[2]]
+## 
+## Call:
+## lm(formula = bill_length_mm ~ body_mass_g, data = .)
+## 
+## Coefficients:
+## (Intercept)  body_mass_g  
+##   26.739548     0.004091  
+## 
+## 
+## [[3]]
+## 
+## Call:
+## lm(formula = bill_length_mm ~ body_mass_g, data = .)
+## 
+## Coefficients:
+## (Intercept)  body_mass_g  
+##   32.174193     0.004463
+```
+
+---
+# Many models with purrr, dplyr, and broom
+
+View the results. First, let's mutate the models list so that we have a tidy coefficient dataframe (using `tidy()`) and a tidy model results dataframe (using `glance()`) 
+
+
+``` r
+ results&lt;-models %&gt;%
+*  mutate(coeffs = map(fit, tidy), # look at the coefficients
+*         modelresults = map(fit, glance))  # R2 and others
+   
+results
+```
+
+```
+## # A tibble: 3 × 5
+##   species   data               fit    coeffs           modelresults     
+##   &lt;fct&gt;     &lt;list&gt;             &lt;list&gt; &lt;list&gt;           &lt;list&gt;           
+## 1 Adelie    &lt;tibble [152 × 6]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt; &lt;tibble [1 × 12]&gt;
+## 2 Gentoo    &lt;tibble [124 × 6]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt; &lt;tibble [1 × 12]&gt;
+## 3 Chinstrap &lt;tibble [68 × 6]&gt;  &lt;lm&gt;   &lt;tibble [2 × 5]&gt; &lt;tibble [1 × 12]&gt;
+```
+
+---
+# Many models with purrr, dplyr, and broom
+
+Next, select what we want to show and unnest it to bring it back to a dataframe
+
+``` r
+ results&lt;-models %&gt;%
+   mutate(coeffs = map(fit, tidy), # look at the coefficients
+          modelresults = map(fit, glance)) %&gt;% # R2 and others 
+*  select(species, coeffs, modelresults) %&gt;% # only keep the results
+*  unnest() # put it back in a dataframe and specify which columns to unnest
+```
+
+``` r
+view(results) # view the results
+```
+
+
+```
+## # A tibble: 6 × 18
+##   species   term   estimate std.error statistic  p.value r.squared adj.r.squared
+##   &lt;fct&gt;     &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+## 1 Adelie    (Inte… 27.0      1.48         18.2  1.06e-39     0.301         0.297
+## 2 Adelie    body_…  0.00319  0.000398      8.01 2.95e-13     0.301         0.297
+## 3 Gentoo    (Inte… 26.7      2.11         12.7  5.45e-24     0.448         0.443
+## 4 Gentoo    body_…  0.00409  0.000413      9.91 2.68e-17     0.448         0.443
+## 5 Chinstrap (Inte… 32.2      3.44          9.34 1.07e-13     0.264         0.253
+## 6 Chinstrap body_…  0.00446  0.000918      4.86 7.48e- 6     0.264         0.253
+## # ℹ 10 more variables: sigma &lt;dbl&gt;, statistic1 &lt;dbl&gt;, p.value1 &lt;dbl&gt;, df &lt;dbl&gt;,
+## #   logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;,
+## #   nobs &lt;int&gt;
+```
+
+---
+# Other very common stats packages
+
+- `stats`: General (`lm`)and generalized (`glm`) linear models (already loaded with base R)   
+- `lmer` : mixed effects models  
+- `lmerTest`' : getting results from lmer  
+- `nlme` : non-linear mixed effects models  
+- `mgcv`, `gam` : generalized additive models  
+- `brms`, `rstan`, and many more  : Bayesian modeling  
+- `lavaan`, `peicewiseSEM` : Structural Equation Models  
+- `rpart`, `randomForest`, `xgboost`, and more : Machine learning models  
+
+And so many more!
+
+Check out [here](https://r4ds.had.co.nz/model-basics.html) for more modeling tips
+
+Also, more info on nest models [here](https://www.kaylinpavlik.com/linear-regression-with-nested-data/) and [here](https://r4ds.had.co.nz/many-models.html)
+---
+# {Tidymodels}
+
+Like almost everything else there is a modeling package that uses the tidyverse language to create models. It is called [{tidymodels}](https://www.tidymodels.org/start/models/). For full transparency, I have not used it, but it looks cool and seems particularly useful for machine learning style modeling.
+
+
+In tidymodels you start by specifying the *functional form* using the [parsnip package](https://tidymodels.github.io/parsnip/). In our case, we will use a *linear regression* which is coded like this:
+
+
+``` r
+linear_reg()
+```
+
+```
+## Linear Regression Model Specification (regression)
+## 
+## Computational engine: lm
+```
+
+--
+
+Next, we need to set the *engine* for what type of linear regression we are modeling. For example, we could use an OLS regression or Bayesian or several other options.  We will stick with OLS.
+
+
+``` r
+lm_mod&lt;-linear_reg() %&gt;%
+* set_engine("lm")
+
+lm_mod
+```
+
+```
+## Linear Regression Model Specification (regression)
+## 
+## Computational engine: lm
+```
+
+---
+# {Tidymodels}
+
+Next, we add the model fit.
+
+
+``` r
+lm_mod&lt;-linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+* fit(bill_length_mm ~ bill_depth_mm*species, data = penguins)
+
+lm_mod
+```
+
+```
+## parsnip model object
+## 
+## 
+## Call:
+## stats::lm(formula = bill_length_mm ~ bill_depth_mm * species, 
+##     data = data)
+## 
+## Coefficients:
+##                    (Intercept)                   bill_depth_mm  
+##                         23.068                           0.857  
+##               speciesChinstrap                   speciesGentoo  
+##                         -9.640                          -5.839  
+## bill_depth_mm:speciesChinstrap     bill_depth_mm:speciesGentoo  
+##                          1.065                           1.164
+```
+
+---
+# {Tidymodels}
+
+Lastly, we add the tidy it. And now we can pipe this into plots, etc.  Nice, tidy way to model.
+
+
+``` r
+lm_mod&lt;-linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+  fit(bill_length_mm ~ bill_depth_mm*species, data = penguins) %&gt;%
+* tidy()
+
+lm_mod
+```
+
+```
+## # A tibble: 6 × 5
+##   term                           estimate std.error statistic  p.value
+##   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                      23.1       3.02       7.65 2.18e-13
+## 2 bill_depth_mm                     0.857     0.164      5.22 3.08e- 7
+## 3 speciesChinstrap                 -9.64      5.72      -1.69 9.26e- 2
+## 4 speciesGentoo                    -5.84      4.54      -1.29 1.99e- 1
+## 5 bill_depth_mm:speciesChinstrap    1.07      0.310      3.44 6.66e- 4
+## 6 bill_depth_mm:speciesGentoo       1.16      0.279      4.17 3.84e- 5
+```
+---
+# Pipe to a plot
+
+
+``` r
+lm_mod&lt;-linear_reg() %&gt;%
+  set_engine("lm") %&gt;%
+  fit(bill_length_mm ~ bill_depth_mm*species, data = penguins) %&gt;%
+  tidy() %&gt;%
+* ggplot()+
+*   geom_point(aes(x = term, y = estimate))+
+*   geom_errorbar(aes(x = term, ymin = estimate-std.error,
+*                     ymax = estimate+std.error), width = 0.1 )+
+* coord_flip()
+
+lm_mod
+```
+
+&lt;img src="23_IterativeCoding_files/figure-html/unnamed-chunk-45-1.png" width="30%" style="display: block; margin: auto;" /&gt;
+---
+# Homework
+
+You have a set of 4 .csv files in data/homework. Each of these files is a timeseries of temperature and light data collected in tide pools in Oregon by Jenn Fields. Your goal is to bring in all 4 files and calculate the mean and standard deviation of both temperature (Temp.C) and light (Intensity.lux) for each tide pool.  Use **both** a for loop and map() functions in your script. (Basically, do it twice). Due Tuesday at 1pm. 
+
+.center[**Data Dictionary**]
+
+|Variable Name | Description|
+|:----------:|:------------|
+|PoolID| ID of the pool|
+|Foundation_spp| Surfgrass or mussel dominated pool|
+|Removal_Control| Was it a removal or control treatment|
+|Date.Time| Date and time|
+|Temp.C| Temperature in degrees C|
+|Intensity.lux| Light level in lux|
+|LoggerDepth| Depth of the logger in meters|
+
+
+---
+# Total awesome R package
+
+[{pushoverr}](https://github.com/briandconnelly/pushoverr): Send push notifications to your phone from R!  Does your code take forever to run and you want to go on a run yourself? Have it send your phone or smartwatch a push notification when it's done!
+
+You will have to follow the directions on the website to download the app to your phone... but, basically with one line of code you can do this!
+
+
+
+``` r
+install.packages("pushoverr")
+library(pushoverr)
+
+pushover("Nyssa - your code is done.")
+```
+
+![](libs/img/push.jpg)
+
+---
+# Total awesome R package
+
+[{pushoverr}](https://github.com/briandconnelly/pushoverr): Send push notifications to your phone from R!  Does your code take forever to run and you want to go on a run yourself? Have it send your phone or smartwatch a push notification when it's done!
+
+You will have to follow the directions on the website to download the app to your phone... but, basically with one line of code you can do this!
+
+
+
+``` r
+install.packages("pushoverr")
+library(pushoverr)
+
+pushover("Nyssa - the cats are awake and they are angry!!")
+```
+![](libs/img/push2.png)
+---
+# This is your last lecture...
+
+.center[
+&lt;img src="https://media.tenor.com/images/66cfde8994fac9efdd0c4ceb68cff97d/tenor.gif"&gt;
+]
+
+
+
+---
+
+.center[&lt;img src="https://i.pinimg.com/originals/b9/0a/79/b90a79b4c361d079144597d0bcdd61de.jpg"/&gt;]
+---
+class: center, middle
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).  
+Many slides modified from the following resources:   
+
+[R4DS](https://r4ds.had.co.nz/iteration.html) and [Advanced R](https://adv-r.hadley.nz/functionals.html)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "15:10"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
